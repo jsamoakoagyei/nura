@@ -17,7 +17,7 @@ const features = [
     title: "Baby Gear Studio",
     description: "Independent, research-driven product reviews and comparisons. Side-by-side testing across safety, durability, ease of use, and value.",
     highlights: ["Expert Testing", "Video Demos", "Recall Alerts"],
-    color: "bg-sage-100 text-sage-600",
+    color: "bg-azure-100 text-azure-600",
     href: "#studio",
   },
   {
@@ -41,7 +41,7 @@ const features = [
     title: "Trusted Care Directory",
     description: "Find verified medical and wellness professionals. From pediatricians to lactation consultants, all credentials verified.",
     highlights: ["Verified Providers", "Real Reviews", "Easy Booking"],
-    color: "bg-sage-100 text-sage-600",
+    color: "bg-azure-100 text-azure-600",
     href: "#care",
   },
 ];
@@ -99,7 +99,7 @@ export function Features() {
             transition={{ delay: 0.2 }}
             className="text-lg text-muted-foreground"
           >
-            No more juggling apps. NURTUR brings together expert guidance, vetted commerce, peer support, and care provider access.
+            No more juggling apps. NURTURR brings together expert guidance, vetted commerce, peer support, and care provider access.
           </motion.p>
         </div>
 

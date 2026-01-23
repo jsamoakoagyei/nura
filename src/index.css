@@ -4,57 +4,57 @@
 @tailwind components;
 @tailwind utilities;
 
-/* NURTUR Design System
+/* NURTURR Design System
    A calm, nurturing aesthetic for confident parenting
-   Colors: Sage greens, warm blush, cream tones
+   Colors: Baby blues with Light Azure (#b2e3ff), warm blush, cream tones
 */
 
 @layer base {
   :root {
-    /* Core palette - warm, organic, calming */
+    /* Core palette - soft baby blue, calming */
     --background: 40 33% 98%;
-    --foreground: 150 20% 18%;
+    --foreground: 202 30% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 150 20% 18%;
+    --card-foreground: 202 30% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 150 20% 18%;
+    --popover-foreground: 202 30% 18%;
 
-    /* Sage green - growth, nature, trust */
-    --primary: 150 25% 35%;
-    --primary-foreground: 40 33% 98%;
+    /* Baby blue - calm, trust, nurturing */
+    --primary: 202 100% 50%;
+    --primary-foreground: 0 0% 100%;
 
     /* Soft blush - warmth, care, nurturing */
     --secondary: 15 45% 93%;
-    --secondary-foreground: 150 20% 18%;
+    --secondary-foreground: 202 30% 18%;
 
     /* Cream undertones */
     --muted: 40 20% 94%;
-    --muted-foreground: 150 10% 45%;
+    --muted-foreground: 202 15% 45%;
 
-    /* Sage accent */
-    --accent: 150 20% 90%;
-    --accent-foreground: 150 25% 25%;
+    /* Azure accent */
+    --accent: 202 60% 92%;
+    --accent-foreground: 202 60% 30%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 40 15% 88%;
-    --input: 40 15% 88%;
-    --ring: 150 25% 35%;
+    --border: 202 20% 88%;
+    --input: 202 20% 88%;
+    --ring: 202 100% 50%;
 
     --radius: 0.75rem;
 
-    /* Extended palette */
-    --sage-50: 150 25% 97%;
-    --sage-100: 150 22% 93%;
-    --sage-200: 150 20% 85%;
-    --sage-300: 150 20% 70%;
-    --sage-400: 150 22% 50%;
-    --sage-500: 150 25% 35%;
-    --sage-600: 150 28% 28%;
-    --sage-700: 150 30% 22%;
+    /* Extended palette - Azure/Baby Blue */
+    --azure-50: 202 100% 97%;
+    --azure-100: 202 95% 93%;
+    --azure-200: 202 90% 85%;
+    --azure-300: 202 85% 75%;
+    --azure-400: 202 90% 65%;
+    --azure-500: 202 100% 55%;
+    --azure-600: 202 100% 45%;
+    --azure-700: 202 100% 35%;
 
     --blush-50: 15 50% 98%;
     --blush-100: 15 48% 95%;
@@ -67,52 +67,52 @@
 
     /* Sidebar */
     --sidebar-background: 40 33% 98%;
-    --sidebar-foreground: 150 20% 18%;
-    --sidebar-primary: 150 25% 35%;
-    --sidebar-primary-foreground: 40 33% 98%;
-    --sidebar-accent: 150 20% 90%;
-    --sidebar-accent-foreground: 150 25% 25%;
-    --sidebar-border: 40 15% 88%;
-    --sidebar-ring: 150 25% 35%;
+    --sidebar-foreground: 202 30% 18%;
+    --sidebar-primary: 202 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 202 60% 92%;
+    --sidebar-accent-foreground: 202 60% 30%;
+    --sidebar-border: 202 20% 88%;
+    --sidebar-ring: 202 100% 50%;
   }
 
   .dark {
-    --background: 150 20% 8%;
+    --background: 202 30% 8%;
     --foreground: 40 33% 95%;
 
-    --card: 150 18% 12%;
+    --card: 202 25% 12%;
     --card-foreground: 40 33% 95%;
 
-    --popover: 150 18% 12%;
+    --popover: 202 25% 12%;
     --popover-foreground: 40 33% 95%;
 
-    --primary: 150 30% 55%;
-    --primary-foreground: 150 20% 8%;
+    --primary: 202 90% 60%;
+    --primary-foreground: 202 30% 8%;
 
     --secondary: 15 25% 20%;
     --secondary-foreground: 40 33% 95%;
 
-    --muted: 150 15% 18%;
+    --muted: 202 20% 18%;
     --muted-foreground: 40 15% 60%;
 
-    --accent: 150 18% 22%;
-    --accent-foreground: 150 30% 70%;
+    --accent: 202 25% 22%;
+    --accent-foreground: 202 80% 70%;
 
     --destructive: 0 62% 45%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 150 15% 20%;
-    --input: 150 15% 20%;
-    --ring: 150 30% 55%;
+    --border: 202 20% 20%;
+    --input: 202 20% 20%;
+    --ring: 202 90% 60%;
 
-    --sidebar-background: 150 20% 8%;
+    --sidebar-background: 202 30% 8%;
     --sidebar-foreground: 40 33% 95%;
-    --sidebar-primary: 150 30% 55%;
-    --sidebar-primary-foreground: 150 20% 8%;
-    --sidebar-accent: 150 18% 22%;
-    --sidebar-accent-foreground: 150 30% 70%;
-    --sidebar-border: 150 15% 20%;
-    --sidebar-ring: 150 30% 55%;
+    --sidebar-primary: 202 90% 60%;
+    --sidebar-primary-foreground: 202 30% 8%;
+    --sidebar-accent: 202 25% 22%;
+    --sidebar-accent-foreground: 202 80% 70%;
+    --sidebar-border: 202 20% 20%;
+    --sidebar-ring: 202 90% 60%;
   }
 }
 
@@ -133,7 +133,7 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-primary to-sage-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary to-azure-400 bg-clip-text text-transparent;
   }
 
   .glass-card {

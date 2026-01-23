@@ -3,7 +3,7 @@ import { Star, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    quote: "NURTUR completely changed how I approached my pregnancy. The Studio reviews saved me from so many impulse purchases, and the community made me feel less alone.",
+    quote: "NURTURR completely changed how I approached my pregnancy. The Studio reviews saved me from so many impulse purchases, and the community made me feel less alone.",
     author: "Sarah M.",
     role: "First-time Mom",
     avatar: "S",
@@ -79,7 +79,7 @@ export function Testimonials() {
               className="relative bg-card rounded-3xl p-8 border border-border"
             >
               {/* Quote Icon */}
-              <Quote className="w-10 h-10 text-sage-200 mb-4" />
+              <Quote className="w-10 h-10 text-azure-200 mb-4" />
 
               {/* Quote Text */}
               <p className="text-foreground leading-relaxed mb-6">
