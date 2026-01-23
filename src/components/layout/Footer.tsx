@@ -28,7 +28,7 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-sage-50 border-t border-border">
+    <footer className="bg-azure-50 border-t border-border">
       <div className="container mx-auto px-4 py-16">
         {/* Main Footer Content */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 mb-12">
@@ -38,7 +38,7 @@ export function Footer() {
               <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-serif font-bold text-xl">N</span>
               </div>
-              <span className="font-serif font-semibold text-xl text-foreground">NURTUR</span>
+              <span className="font-serif font-semibold text-xl text-foreground">NURTURR</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               The trusted platform for confident parenting decisions.
@@ -105,7 +105,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} NURTUR. All rights reserved.
+            © {new Date().getFullYear()} NURTURR. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground flex items-center gap-1">
             Made with <Heart className="w-4 h-4 text-rose-400 fill-rose-400" /> for parents everywhere

@@ -1,14 +1,46 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Leaf } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+
+// Bubble component for CTA section
+function CTABubble({ className, delay = 0, size = 40 }: { className?: string; delay?: number; size?: number }) {
+  return (
+    <motion.div
+      initial={{ y: "100%", opacity: 0 }}
+      animate={{ 
+        y: "-100vh", 
+        opacity: [0, 0.3, 0.4, 0.3, 0],
+      }}
+      transition={{ 
+        duration: 12, 
+        delay,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+      className={`absolute rounded-full bg-white/10 backdrop-blur-sm border border-white/20 ${className}`}
+      style={{ width: size, height: size }}
+    />
+  );
+}
 
 export function CTA() {
   return (
     <section className="py-24 lg:py-32 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary via-sage-500 to-sage-600" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary via-azure-500 to-azure-600" />
       
-      {/* Decorative Elements */}
+      {/* Decorative Bubbles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <CTABubble className="left-[10%]" delay={0} size={80} />
+        <CTABubble className="left-[25%]" delay={2} size={40} />
+        <CTABubble className="left-[50%]" delay={1} size={60} />
+        <CTABubble className="left-[75%]" delay={3} size={50} />
+        <CTABubble className="left-[90%]" delay={1.5} size={35} />
+        <CTABubble className="left-[5%]" delay={4} size={45} />
+        <CTABubble className="left-[60%]" delay={5} size={70} />
+      </div>
+      
+      {/* Static decorative elements */}
       <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
 
@@ -20,7 +52,7 @@ export function CTA() {
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white/90 text-sm font-medium mb-8"
           >
-            <Leaf className="w-4 h-4" />
+            <span className="w-2 h-2 rounded-full bg-white/60 animate-pulse" />
             Join our growing community
           </motion.div>
 

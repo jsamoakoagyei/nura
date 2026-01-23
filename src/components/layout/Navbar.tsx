@@ -27,7 +27,7 @@ export function Navbar() {
             <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-serif font-bold text-xl">N</span>
             </div>
-            <span className="font-serif font-semibold text-xl text-foreground">NURTUR</span>
+            <span className="font-serif font-semibold text-xl text-foreground">NURTURR</span>
           </a>
 
           {/* Desktop Navigation */}
