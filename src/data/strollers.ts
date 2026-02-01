@@ -1,6 +1,7 @@
 import butterflyImage from "../assets/strollers/butterfly.png";
 import cruzV2Image from "../assets/strollers/cruz-v2.png";
 import yoyo2Image from "../assets/strollers/yoyo2.png";
+import donkey5Image from "../assets/strollers/donkey-5.png";
 
 export interface Stroller {
   id: string;
@@ -84,7 +85,7 @@ export const strollers: Stroller[] = [
     id: "donkey-5",
     name: "Donkey 5",
     brand: "Bugaboo",
-    image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=600&fit=crop",
+    image: donkey5Image,
     highlights: [
       "Converts to double",
       "Widest footprint",
