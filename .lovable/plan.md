@@ -1,82 +1,66 @@
 
-# Rebrand from NURTURR to nura
+
+# Update Hero & How It Works Sections
 
 ## Overview
-This plan covers updating all branding across the platform from "NURTURR" to "nura", integrating your new logo assets, and updating the favicon.
+Update the copy in both the Hero section and How It Works section with the new messaging that emphasizes nura's focus on real parent experiences, trusted reviews, and unbiased information.
 
-## Logo Assets Integration
+## Hero Section Changes
 
-Your uploaded assets will be used as follows:
-- **n_icon.png**: Will be used as the favicon and the icon in the navigation bar
-- **pg_16_nura.png**: Contains the full logo with the adorable ladybug mascot - this design can be referenced for future marketing pages
+### Current vs New Content
 
-## Changes Summary
+| Element | Current | New |
+|---------|---------|-----|
+| **Headline** | "Confident parenting starts here" | "Parenthood is full of decisions. nura helps you make the right ones." |
+| **Subheadline** | "Expert guidance, vetted products..." | "Real-world reviews, expert insight, and parent-to-parent wisdom—without the noise, ads, or pressure." |
+| **Support Line** | (none) | "Built for expecting and new parents navigating baby gear, services, and care with confidence." |
+| **Primary CTA** | "Start Your Journey" | "Start Your Journey" |
+| **Secondary CTA** | "Explore Features" | "See how nura works" |
 
-### 1. Copy Logo Assets to Project
-- Copy `n_icon.png` to `public/favicon.png` (for favicon)
-- Copy `n_icon.png` to `src/assets/nura-icon.png` (for React components)
+### Structure Update
+- Add a new support line element below the subheadline with smaller, muted text
+- The headline will be reformatted as two lines with "nura" highlighted in the primary color
 
-### 2. Update HTML Meta Tags (index.html)
-- Page title: "nura - Confident Parenting Starts Here"
-- Meta description: Update "NURTURR" to "nura"
-- Author meta tag: "nura"
-- Open Graph title: "nura - Confident Parenting Starts Here"
-- Twitter site: "@nuraparenting"
-- Add favicon link to the new icon
+## How It Works Section Changes
 
-### 3. Update Navigation Bar (Navbar.tsx)
-- Replace the styled "N" box with the actual nura icon image
-- Update brand text from "NURTURR" to "nura"
-- Use lowercase styling to match your logo design
+### Current: 3 Steps → New: 4 Steps
 
-### 4. Update Footer (Footer.tsx)
-- Replace logo section with nura icon image
-- Update brand name from "NURTURR" to "nura"
-- Update copyright text to "nura"
+The section will be restructured from 3 steps to 4 steps with completely new content:
 
-### 5. Update Content Sections
-- **Features.tsx**: Update brand mention in description
-- **HowItWorks.tsx**: Change "How NURTURR works" to "How nura works"
-- **Testimonials.tsx**: Update quote mentioning the brand
+| Step | New Title | New Description |
+|------|-----------|-----------------|
+| **01** | Built from real parent experiences | nura curates in-depth reviews from parents who've actually used the product, across diverse family structures, budgets, and needs. |
+| **02** | Designed around real life—not marketing | Insights focus on daily use, tradeoffs, and long-term value instead of polished brand claims or sponsored rankings. |
+| **03** | Context that reflects your family | Filter insights by lifestyle, space, income range, caregiving needs, and values to see what truly applies to you. |
+| **04** | Decisions you can trust | No paid placements. No affiliate bias. Just transparent information you can feel confident acting on. |
 
-### 6. Update CSS Comments (index.css)
-- Update design system header comment from "NURTURR" to "nura"
+### Layout Adjustment
+- Grid will change from 3 columns to 4 columns on large screens (`lg:grid-cols-4`)
+- New icons will be selected to match the new content themes:
+  - Step 1: Users (real parent experiences)
+  - Step 2: Eye (real life focus)
+  - Step 3: Filter (personalized context)
+  - Step 4: ShieldCheck (trust/transparency)
 
 ---
 
 ## Technical Details
 
 ### Files to Modify
+
 | File | Changes |
 |------|---------|
-| `index.html` | Title, meta tags, favicon link |
-| `src/components/layout/Navbar.tsx` | Logo image + brand text |
-| `src/components/layout/Footer.tsx` | Logo image + brand text + copyright |
-| `src/components/sections/Features.tsx` | Brand mention in copy |
-| `src/components/sections/HowItWorks.tsx` | Section heading |
-| `src/components/sections/Testimonials.tsx` | Testimonial quote |
-| `src/index.css` | Comment header |
+| `src/components/sections/Hero.tsx` | Update headline, subheadline, add support line, update CTA text |
+| `src/components/sections/HowItWorks.tsx` | New 4-step content, update icons, adjust grid layout |
 
-### Files to Create/Copy
-| Source | Destination | Purpose |
-|--------|-------------|---------|
-| `user-uploads://n_icon.png` | `public/favicon.png` | Favicon |
-| `user-uploads://n_icon.png` | `src/assets/nura-icon.png` | Logo in components |
+### Hero.tsx Specific Changes
+- Line 77-81: Replace headline content
+- Line 88-91: Replace subheadline content  
+- Add new support line element after subheadline (around line 92)
+- Line 100-106: Update CTA button text
 
-### Logo Component Updates
+### HowItWorks.tsx Specific Changes
+- Lines 5-24: Replace `steps` array with 4 new items
+- Line 2: Update icon imports (replace Baby, Sparkles, Heart with Users, Eye, Filter, ShieldCheck)
+- Line 53: Change grid class to `lg:grid-cols-4` and reduce gap for 4 columns
 
-The current logo in Navbar and Footer looks like this:
-```text
-+----------+
-| Styled N | + "NURTURR" text
-+----------+
-```
-
-It will become:
-```text
-+----------+
-| Icon Img | + "nura" text
-+----------+
-```
-
-The icon will use your uploaded image which features the rounded lowercase "n" on the baby blue background, matching your brand aesthetic perfectly.
