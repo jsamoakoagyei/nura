@@ -30,8 +30,8 @@ export const infantCarSeatProducts: Product[] = [
     },
   },
   {
-    id: "cloud-g",
-    name: "Cloud G",
+    id: "cloud-g-pro",
+    name: "Cloud G Pro",
     brand: "Cybex",
     category: "infant-car-seat",
     image: cloudGImage,
