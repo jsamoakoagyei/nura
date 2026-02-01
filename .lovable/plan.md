@@ -38,8 +38,8 @@ The section will be restructured from 3 steps to 4 steps with completely new con
 - Grid will change from 3 columns to 4 columns on large screens (`lg:grid-cols-4`)
 - New icons will be selected to match the new content themes:
   - Step 1: Users (real parent experiences)
-  - Step 2: Eye (real life focus)
-  - Step 3: Filter (personalized context)
+  - Step 2: Baby (real life focus)
+  - Step 3: Heart (Context that reflects your family)
   - Step 4: ShieldCheck (trust/transparency)
 
 ---
@@ -61,6 +61,6 @@ The section will be restructured from 3 steps to 4 steps with completely new con
 
 ### HowItWorks.tsx Specific Changes
 - Lines 5-24: Replace `steps` array with 4 new items
-- Line 2: Update icon imports (replace Baby, Sparkles, Heart with Users, Eye, Filter, ShieldCheck)
+- Line 2: Update icon imports (Keep Baby, Sparkles, Heart, Add ShieldCheck)
 - Line 53: Change grid class to `lg:grid-cols-4` and reduce gap for 4 columns
 
