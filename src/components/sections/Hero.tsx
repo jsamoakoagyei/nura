@@ -75,9 +75,9 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="font-serif text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold tracking-tight text-foreground mb-6"
           >
-            Confident parenting
+            Parenthood is full of decisions.
             <br />
-            <span className="text-primary">starts here</span>
+            <span className="text-primary">nura</span> helps you make the right ones.
           </motion.h1>
 
           {/* Subheadline */}
@@ -85,9 +85,19 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
+            className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-4"
           >
-            Expert guidance, vetted products, supportive community, and trusted care providers — all in one calm, curated space designed for your parenting journey.
+            Real-world reviews, expert insight, and parent-to-parent wisdom—without the noise, ads, or pressure.
+          </motion.p>
+
+          {/* Support Line */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="text-sm sm:text-base text-muted-foreground/80 max-w-xl mx-auto mb-10"
+          >
+            Built for expecting and new parents navigating baby gear, services, and care with confidence.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -102,7 +112,7 @@ export function Hero() {
               <ArrowRight className="w-5 h-5 ml-1" />
             </Button>
             <Button variant="hero-outline" size="xl">
-              Explore Features
+              See how nura works
             </Button>
           </motion.div>
 

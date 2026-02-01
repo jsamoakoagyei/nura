@@ -1,25 +1,31 @@
 import { motion } from "framer-motion";
-import { Baby, Sparkles, Heart, ArrowRight } from "lucide-react";
+import { Users, Baby, Heart, ShieldCheck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const steps = [
   {
     number: "01",
-    icon: Sparkles,
-    title: "Tell us about your journey",
-    description: "Share your due date or child's age, preferences, and what matters most to you.",
+    icon: Users,
+    title: "Built from real parent experiences",
+    description: "nura curates in-depth reviews from parents who've actually used the product, across diverse family structures, budgets, and needs.",
   },
   {
     number: "02",
     icon: Baby,
-    title: "Get personalized guidance",
-    description: "Receive stage-appropriate content, product recommendations, and community connections.",
+    title: "Designed around real life—not marketing",
+    description: "Insights focus on daily use, tradeoffs, and long-term value instead of polished brand claims or sponsored rankings.",
   },
   {
     number: "03",
     icon: Heart,
-    title: "Parent with confidence",
-    description: "Access trusted resources, shop with certainty, and connect with expert care when needed.",
+    title: "Context that reflects your family",
+    description: "Filter insights by lifestyle, space, income range, caregiving needs, and values to see what truly applies to you.",
+  },
+  {
+    number: "04",
+    icon: ShieldCheck,
+    title: "Decisions you can trust",
+    description: "No paid placements. No affiliate bias. Just transparent information you can feel confident acting on.",
   },
 ];
 
@@ -50,7 +56,7 @@ export function HowItWorks() {
           </div>
 
           {/* Steps */}
-          <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 mb-16">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mb-16">
             {steps.map((step, index) => (
               <motion.div
                 key={step.number}
