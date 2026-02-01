@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Menu, X, Search, Bell, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SettingsPopover } from "@/components/studio/SettingsPopover";
 import nuraIcon from "@/assets/nura-icon.png";
 
 const navItems = [
@@ -48,6 +49,7 @@ export function Navbar() {
             <Button variant="ghost" size="icon" className="rounded-xl">
               <Bell className="w-5 h-5" />
             </Button>
+            <SettingsPopover />
             <Button variant="soft" className="gap-2">
               <User className="w-4 h-4" />
               Sign In
