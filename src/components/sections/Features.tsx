@@ -99,7 +99,7 @@ export function Features() {
             transition={{ delay: 0.2 }}
             className="text-lg text-muted-foreground"
           >
-            No more juggling apps. NURTURR brings together expert guidance, vetted commerce, peer support, and care provider access.
+            No more juggling apps. nura brings together expert guidance, vetted commerce, peer support, and care provider access.
           </motion.p>
         </div>
 
