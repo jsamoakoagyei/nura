@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import * as React from "react";
 import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,11 +13,8 @@ interface SaveButtonProps {
   className?: string;
 }
 
-export const SaveButton = forwardRef<HTMLButtonElement, SaveButtonProps>(
-  function SaveButton(
-    { isSaved, onToggle, size = "default", variant = "default", className },
-    ref
-  ) {
+const SaveButton = React.forwardRef<HTMLButtonElement, SaveButtonProps>(
+  ({ isSaved, onToggle, size = "default", variant = "default", className }, ref) => {
     const sizeClasses = {
       sm: "h-8 w-8",
       default: "h-10 w-10",
@@ -87,3 +84,7 @@ export const SaveButton = forwardRef<HTMLButtonElement, SaveButtonProps>(
     );
   }
 );
+
+SaveButton.displayName = "SaveButton";
+
+export { SaveButton };
