@@ -1,40 +1,43 @@
 
-
-# Phase 1: Expanded Data Model + Category Carousels
+# Phase 2: Product Detail Drawer, Save Functionality & Compare Feature
 
 ## Overview
-Transform The Studio from a single stroller carousel into a multi-category browsing experience with sectioned carousels for **Strollers** and **Infant Car Seats**. This phase establishes the foundation for the full MVP including the enhanced data model and reusable carousel components.
+Build on Phase 1's foundation to add interactive product exploration with a slide-up detail drawer, save-to-list functionality with a floating "My Gear" drawer, and a comparison feature for viewing up to 3 products side-by-side.
 
 ---
 
 ## What You'll Get
 
-**Sectioned Studio Page**
-- Strollers carousel section (existing 5 products, enhanced data)
-- Infant Car Seats carousel section (5 new products)
-- Lifestyle filter chips at the top
-- Each section with its own 3D carousel + highlight panel
+**Product Detail Drawer**
+- Slide-up drawer when tapping a product card
+- Structured review sections with ratings
+- Full specs display
+- Save/unsave button with heart icon
 
-**Enhanced Product Data**
-- Lifestyle tags (apartment-friendly, travel-heavy, budget-conscious, etc.)
-- Verdict field (buy / skip / depends)
-- Best for / Not for summaries
-- Structured review sections for detail pages (Phase 2)
+**My Gear List (Floating Drawer)**
+- Floating action button showing saved count
+- Bottom drawer with saved products grid
+- Quick remove functionality
+- "Compare" button when 2-3 items saved
+
+**Compare Feature**
+- Side-by-side comparison of up to 3 products
+- Synced specs rows for easy comparison
+- Verdict badges and key highlights
+- Full-screen drawer/dialog experience
 
 ---
 
 ## New Files to Create
 
 ```text
-src/data/products.ts              - Unified product types and lifestyle tag constants
-src/data/infantCarSeats.ts        - Infant car seat products data
 src/components/studio/
-  CategorySection.tsx             - Reusable section with title + carousel
-  ProductCarousel.tsx             - Generic carousel (refactored from StrollerCarousel)
-  ProductCard.tsx                 - Generic card (refactored from StrollerCard)
-  ProductHighlightPanel.tsx       - Generic panel (refactored from HighlightPanel)
-  LifestyleFilters.tsx            - Filter chips component
-src/hooks/useLocalGearList.ts     - Local storage hook for saved products
+  ProductDetailDrawer.tsx      - Slide-up drawer with full product details
+  SaveButton.tsx               - Heart icon save/unsave button
+  MyGearFAB.tsx                - Floating action button with badge
+  MyGearDrawer.tsx             - Saved products drawer
+  CompareDrawer.tsx            - Side-by-side comparison view
+  CompareProductCard.tsx       - Compact card for comparison grid
 ```
 
 ---
@@ -43,134 +46,148 @@ src/hooks/useLocalGearList.ts     - Local storage hook for saved products
 
 | File | Changes |
 |------|---------|
-| `src/pages/Studio.tsx` | Replace single carousel with sectioned layout + filters |
-| `src/data/strollers.ts` | Migrate to new schema with lifestyle tags, verdict, bestFor/notFor |
+| `src/pages/Studio.tsx` | Add gear list state provider, floating FAB, drawers |
+| `src/components/studio/ProductCard.tsx` | Add tap handler for detail drawer |
+| `src/components/studio/ProductHighlightPanel.tsx` | Add save button |
+| `src/data/products.ts` | Add ReviewSection data to products (optional enhancement) |
 
 ---
 
-## Data Model
-
-**New Product Interface:**
-```typescript
-interface Product {
-  id: string;
-  name: string;
-  brand: string;
-  category: "stroller" | "infant-car-seat" | "monitor";
-  image: string;
-  
-  // Lifestyle & filtering
-  lifestyleTags: LifestyleTag[];
-  
-  // Quick verdict
-  verdict: "buy" | "skip" | "depends";
-  bestFor: string;
-  notFor: string;
-  
-  // Existing fields
-  highlights: string[];
-  specs: Record<string, string>;
-  
-  // For detail page (Phase 2)
-  reviewSections?: ReviewSection[];
-}
-
-type LifestyleTag = 
-  | "apartment-friendly"
-  | "travel-heavy" 
-  | "budget-conscious"
-  | "design-forward"
-  | "eco-conscious";
-```
-
----
-
-## Infant Car Seat Products
-
-| Product | Brand | Verdict | Best For |
-|---------|-------|---------|----------|
-| Mesa V2 | UPPAbaby | buy | UPPAbaby stroller compatibility, easy install |
-| Cloud G | Cybex | buy | Lie-flat position, premium safety |
-| KeyFit 35 | Chicco | buy | Budget-friendly, trusted safety ratings |
-| Pipa Urbn | Nuna | buy | No base needed, travel-friendly |
-| Aton 2 | Cybex | depends | Compact size, lighter weight |
-
----
-
-## Studio Page Layout
+## User Flow
 
 ```text
-+--------------------------------------------------+
-|              The Baby Gear Studio                |
-|    Real parent experiences. Real decisions.      |
-+--------------------------------------------------+
-|  [ All ] [ Strollers ] [ Car Seats ]             |  <- Category tabs
-+--------------------------------------------------+
-|  [Apartment] [Travel] [Budget] [Design] [Eco]    |  <- Lifestyle filters
-+--------------------------------------------------+
-|                                                  |
-|              === STROLLERS ===                   |
-|         [  3D Carousel with 5 products  ]        |
-|            [ Highlight Panel ]                   |
-|                                                  |
-+--------------------------------------------------+
-|                                                  |
-|           === INFANT CAR SEATS ===               |
-|         [  3D Carousel with 5 products  ]        |
-|            [ Highlight Panel ]                   |
-|                                                  |
-+--------------------------------------------------+
+1. User browses carousel
+   └── Tap card → ProductDetailDrawer opens
+       └── Tap "Save" → Added to gear list
+           └── FAB shows count badge
+
+2. User taps FAB
+   └── MyGearDrawer opens
+       └── View saved items
+       └── Remove items
+       └── Tap "Compare" (if 2-3 items) → CompareDrawer opens
+
+3. Compare view
+   └── Side-by-side specs
+   └── Close to return to studio
 ```
+
+---
+
+## Component Details
+
+### ProductDetailDrawer
+- Uses Vaul drawer (already installed)
+- Shows product image at top
+- Verdict badge + best for/not for
+- Expandable review sections
+- Save button prominently placed
+
+### SaveButton
+- Heart icon (outline = unsaved, filled = saved)
+- Animated state change
+- Uses `useLocalGearList` hook
+
+### MyGearFAB
+- Fixed position bottom-right
+- Badge showing count (hidden if 0)
+- Opens MyGearDrawer on tap
+
+### MyGearDrawer
+- Bottom sheet with saved products
+- Grid of compact product cards
+- Remove button per item
+- "Compare Selected" button (enabled with 2-3 items)
+
+### CompareDrawer
+- Full-screen drawer or dialog
+- Products in columns
+- Rows: Image, Name, Verdict, Best For, each spec
+- Highlight differences
 
 ---
 
 ## Implementation Sequence
 
-1. **Create unified data model** (`src/data/products.ts`)
-   - Define Product interface with all new fields
-   - Export type definitions and lifestyle tag constants
+1. **Create SaveButton component**
+   - Heart icon with animation
+   - Connect to useLocalGearList hook
 
-2. **Migrate stroller data** 
-   - Add lifestyle tags, verdict, bestFor/notFor to existing 5 strollers
-   - Update specs to use generic Record format
+2. **Create ProductDetailDrawer**
+   - Vaul drawer with product details
+   - Integrate SaveButton
+   - Review sections with optional ratings
 
-3. **Add infant car seat data** (`src/data/infantCarSeats.ts`)
-   - 5 infant car seat products with full data
-   - Placeholder images initially (gradient backgrounds)
+3. **Update ProductCard**
+   - Add onDetailOpen callback
+   - Pass to parent for drawer control
 
-4. **Create generic components**
-   - `ProductCard.tsx` - Accept Product instead of Stroller
-   - `ProductCarousel.tsx` - Accept products array + category
-   - `ProductHighlightPanel.tsx` - Show lifestyle tags + verdict badge
-   - `CategorySection.tsx` - Wraps carousel with section header
+4. **Create MyGearFAB**
+   - Floating button with count badge
+   - Fixed positioning
 
-5. **Build filter component** (`LifestyleFilters.tsx`)
-   - Horizontal scroll on mobile
-   - Multi-select lifestyle chips
-   - "All" chip to clear filters
+5. **Create MyGearDrawer**
+   - List of saved products
+   - Remove functionality
+   - Compare button logic
 
-6. **Rebuild Studio page**
-   - Add filter state management
-   - Render CategorySection for each category
-   - Filter products based on selected lifestyle tags
+6. **Create CompareDrawer**
+   - Side-by-side layout
+   - Specs comparison table
+   - Mobile-friendly scrolling
 
-7. **Create local storage hook**
-   - `useLocalGearList()` for saved products (prep for Phase 2)
+7. **Wire up Studio page**
+   - Add state for active product (detail drawer)
+   - Add state for compare selection
+   - Render all drawer components
 
 ---
 
 ## Technical Notes
 
-- Carousel physics remain unchanged (stiffness: 220, damping: 22, mass: 0.8)
-- Each category section operates independently
-- Filters apply across all categories simultaneously
-- Placeholder images for car seats until assets are added
-- Original StrollerCarousel components kept until migration complete
+- Uses existing Vaul drawer component for smooth mobile UX
+- localStorage persistence via `useLocalGearList` (already built)
+- Maximum 3 items for comparison (enforced in UI)
+- All drawers use consistent spring physics
+- Mobile-first responsive design
+- Heart animation uses Framer Motion scale/fill transition
 
 ---
 
-## Phase 2 Preview (Next Session)
-- Product detail drawer with structured reviews
-- Save functionality with floating "My Gear" drawer
-- Compare up to 3 products feature
+## Visual Reference
 
+**Detail Drawer Layout:**
+```text
+┌─────────────────────────────┐
+│  ─────  (drag handle)       │
+│                             │
+│  [  Product Image  ]        │
+│                             │
+│  Brand · [Buy Badge]        │
+│  Product Name               │
+│                             │
+│  ✓ Best for: ...           │
+│  ✗ Not for: ...            │
+│                             │
+│  ▸ Design & Build          │
+│  ▸ Daily Use               │
+│  ▸ Value                   │
+│                             │
+│  [ ♡ Save to My Gear ]     │
+└─────────────────────────────┘
+```
+
+**Compare Layout:**
+```text
+┌─────────────────────────────────────┐
+│  Compare (3)              [Close]   │
+├───────────┬───────────┬─────────────┤
+│  [Image]  │  [Image]  │  [Image]    │
+│  Vista V2 │  Cruz V2  │  Butterfly  │
+│  [Buy]    │  [Buy]    │  [Buy]      │
+├───────────┼───────────┼─────────────┤
+│  27 lbs   │  23 lbs   │  16.1 lbs   │  Weight
+│  17x25x33 │  17x25x33 │  17x9x21    │  Folded
+│  0-50 lbs │  0-50 lbs │  6m-50 lbs  │  Age
+└───────────┴───────────┴─────────────┘
+```
