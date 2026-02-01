@@ -43,14 +43,14 @@ Reduce the Features section from 4 pillars to 2 by removing the Trusted Care Dir
 
 | Current | New |
 |---------|-----|
-| Studio, Shop, Community, Care | Reviews, Shop, Community |
+| Studio, Shop, Community, Care | Reviews, Community |
 
 ### 3. Footer (Footer.tsx)
 
 **Update Product Links:**
 | Current | New |
 |---------|-----|
-| Baby Gear Studio | Reviews & Shop |
+| Baby Gear Studio | Trusted Reviews |
 | Marketplace | (remove - merged above) |
 | Community | Community |
 | Care Directory | (remove) |
