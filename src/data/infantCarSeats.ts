@@ -2,6 +2,7 @@ import type { Product } from "./products";
 import mesaV2Image from "@/assets/car-seats/mesa-v2.png";
 import cloudGImage from "@/assets/car-seats/cloud-g.png";
 import doonaPlusImage from "@/assets/car-seats/doona-plus.png";
+import pipaUrbnImage from "@/assets/car-seats/pipa-urbn.png";
 
 // Placeholder gradient images until real assets are added
 const placeholderImage = "";
@@ -75,7 +76,7 @@ export const infantCarSeatProducts: Product[] = [
     name: "Pipa Urbn",
     brand: "Nuna",
     category: "infant-car-seat",
-    image: placeholderImage,
+    image: pipaUrbnImage,
     lifestyleTags: ["apartment-friendly", "travel-heavy"],
     verdict: "buy",
     bestFor: "Urban parents who want flexibility without a separate base",
