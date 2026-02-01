@@ -2,6 +2,7 @@ import butterflyImage from "../assets/strollers/butterfly.png";
 import cruzV2Image from "../assets/strollers/cruz-v2.png";
 import yoyo2Image from "../assets/strollers/yoyo2.png";
 import donkey5Image from "../assets/strollers/donkey-5.png";
+import vistaV2Image from "../assets/strollers/vista-v2.png";
 
 export interface Stroller {
   id: string;
@@ -21,7 +22,7 @@ export const strollers: Stroller[] = [
     id: "vista-v2",
     name: "Vista V2",
     brand: "UPPAbaby",
-    image: "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=600&h=600&fit=crop",
+    image: vistaV2Image,
     highlights: [
       "Smooth over uneven sidewalks",
       "Bulky fold for small trunks",
