@@ -3,10 +3,8 @@ import nuraIcon from "@/assets/nura-icon.png";
 
 const footerLinks = {
   product: [
-    { name: "Baby Gear Studio", href: "#" },
-    { name: "Marketplace", href: "#" },
-    { name: "Community", href: "#" },
-    { name: "Care Directory", href: "#" },
+    { name: "Trusted Reviews", href: "#shop" },
+    { name: "Community", href: "#community" },
   ],
   company: [
     { name: "About Us", href: "#" },
