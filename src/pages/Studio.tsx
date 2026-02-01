@@ -6,7 +6,12 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CategorySection } from "@/components/studio/CategorySection";
 import { LifestyleFilters } from "@/components/studio/LifestyleFilters";
+import { ProductDetailDrawer } from "@/components/studio/ProductDetailDrawer";
+import { MyGearFAB } from "@/components/studio/MyGearFAB";
+import { MyGearDrawer } from "@/components/studio/MyGearDrawer";
+import { CompareDrawer } from "@/components/studio/CompareDrawer";
 import { Button } from "@/components/ui/button";
+import { useLocalGearList } from "@/hooks/useLocalGearList";
 import type { LifestyleTag, ProductCategory, Product } from "@/data/products";
 import { CATEGORY_LABELS } from "@/data/products";
 import { strollerProducts } from "@/data/strollersEnhanced";
@@ -18,6 +23,29 @@ const allProducts: Product[] = [...strollerProducts, ...infantCarSeatProducts];
 export default function Studio() {
   const [selectedTags, setSelectedTags] = useState<LifestyleTag[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | "all">("all");
+  
+  // Drawer states
+  const [detailProduct, setDetailProduct] = useState<Product | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isGearDrawerOpen, setIsGearDrawerOpen] = useState(false);
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
+
+  // Gear list hook
+  const {
+    savedProducts: savedProductIds,
+    toggleProduct,
+    removeProduct,
+    isProductSaved,
+    clearAll,
+    count: savedCount,
+  } = useLocalGearList();
+
+  // Get full product objects for saved items
+  const savedProducts = useMemo(() => {
+    return savedProductIds
+      .map((saved) => allProducts.find((p) => p.id === saved.productId))
+      .filter((p): p is Product => p !== undefined);
+  }, [savedProductIds]);
 
   const handleTagToggle = useCallback((tag: LifestyleTag) => {
     setSelectedTags((current) =>
@@ -33,6 +61,39 @@ export default function Studio() {
 
   const handleCategoryChange = useCallback((category: ProductCategory | "all") => {
     setSelectedCategory(category);
+  }, []);
+
+  // Detail drawer handlers
+  const handleDetailOpen = useCallback((product: Product) => {
+    setDetailProduct(product);
+    setIsDetailOpen(true);
+  }, []);
+
+  const handleDetailClose = useCallback(() => {
+    setIsDetailOpen(false);
+    // Delay clearing product to allow drawer close animation
+    setTimeout(() => setDetailProduct(null), 300);
+  }, []);
+
+  // Gear drawer handlers
+  const handleGearDrawerOpen = useCallback(() => {
+    setIsGearDrawerOpen(true);
+  }, []);
+
+  // Compare handlers
+  const handleCompareOpen = useCallback(() => {
+    setIsGearDrawerOpen(false);
+    setIsCompareOpen(true);
+  }, []);
+
+  const handleProductClickFromDrawer = useCallback((product: Product) => {
+    setIsGearDrawerOpen(false);
+    setIsCompareOpen(false);
+    // Small delay to allow drawer close animation
+    setTimeout(() => {
+      setDetailProduct(product);
+      setIsDetailOpen(true);
+    }, 200);
   }, []);
 
   // Filter products based on selected tags and category
@@ -117,6 +178,7 @@ export default function Studio() {
                 title={CATEGORY_LABELS["stroller"]}
                 products={strollers}
                 id="strollers"
+                onDetailOpen={handleDetailOpen}
               />
             )}
 
@@ -125,6 +187,7 @@ export default function Studio() {
                 title={CATEGORY_LABELS["infant-car-seat"]}
                 products={carSeats}
                 id="car-seats"
+                onDetailOpen={handleDetailOpen}
               />
             )}
 
@@ -149,13 +212,50 @@ export default function Studio() {
               transition={{ delay: 1, duration: 0.5 }}
               className="text-center text-sm text-muted-foreground mt-8"
             >
-              Swipe, drag, or use arrow keys to explore each section
+              Tap a product to view details • Swipe to explore
             </motion.p>
           )}
         </div>
       </main>
 
       <Footer />
+
+      {/* Floating Action Button for gear list */}
+      <MyGearFAB count={savedCount} onClick={handleGearDrawerOpen} />
+
+      {/* Product Detail Drawer */}
+      <ProductDetailDrawer
+        product={detailProduct}
+        isOpen={isDetailOpen}
+        onOpenChange={(open) => {
+          if (!open) handleDetailClose();
+        }}
+        isSaved={detailProduct ? isProductSaved(detailProduct.id) : false}
+        onToggleSave={() => {
+          if (detailProduct) {
+            toggleProduct(detailProduct.id);
+          }
+        }}
+      />
+
+      {/* My Gear Drawer */}
+      <MyGearDrawer
+        isOpen={isGearDrawerOpen}
+        onOpenChange={setIsGearDrawerOpen}
+        savedProducts={savedProducts}
+        onRemove={removeProduct}
+        onClearAll={clearAll}
+        onCompare={handleCompareOpen}
+        onProductClick={handleProductClickFromDrawer}
+      />
+
+      {/* Compare Drawer */}
+      <CompareDrawer
+        isOpen={isCompareOpen}
+        onOpenChange={setIsCompareOpen}
+        products={savedProducts.slice(0, 3)}
+        onProductClick={handleProductClickFromDrawer}
+      />
     </div>
   );
 }

@@ -10,9 +10,10 @@ import { Button } from "@/components/ui/button";
 interface ProductCarouselProps {
   products: Product[];
   id: string; // Unique ID for keyboard event handling
+  onDetailOpen?: (product: Product) => void;
 }
 
-export function ProductCarousel({ products, id }: ProductCarouselProps) {
+export function ProductCarousel({ products, id, onDetailOpen }: ProductCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const dragX = useMotionValue(0);
 
@@ -120,6 +121,7 @@ export function ProductCarousel({ products, id }: ProductCarouselProps) {
                   offset={offset}
                   isActive={offset === 0}
                   onClick={() => goToIndex(index)}
+                  onDetailOpen={onDetailOpen}
                 />
               );
             })}
