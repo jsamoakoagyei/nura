@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { feedbackUnsave, feedbackTap } from "@/lib/feedback";
 
 interface MyGearDrawerProps {
   isOpen: boolean;
@@ -95,7 +96,10 @@ export function MyGearDrawer({
           {savedProducts.length > 0 && (
             <div className="flex-shrink-0 border-t border-border/50 p-4 space-y-3">
               <Button
-                onClick={onCompare}
+                onClick={() => {
+                  feedbackTap();
+                  onCompare();
+                }}
                 disabled={!canCompare}
                 className="w-full h-12"
               >
@@ -113,7 +117,10 @@ export function MyGearDrawer({
                 </p>
               )}
               <Button
-                onClick={onClearAll}
+                onClick={() => {
+                  feedbackUnsave();
+                  onClearAll();
+                }}
                 variant="ghost"
                 size="sm"
                 className="w-full text-muted-foreground hover:text-destructive"
@@ -200,6 +207,7 @@ function GearCard({
         size="icon"
         onClick={(e) => {
           e.stopPropagation();
+          feedbackUnsave();
           onRemove();
         }}
         className="absolute top-1 left-1 h-7 w-7 rounded-full bg-white/90 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-rose-50 hover:text-rose-600"
