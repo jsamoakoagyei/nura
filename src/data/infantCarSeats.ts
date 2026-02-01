@@ -1,4 +1,5 @@
 import type { Product } from "./products";
+import mesaV2Image from "@/assets/car-seats/mesa-v2.png";
 
 // Placeholder gradient images until real assets are added
 const placeholderImage = "";
@@ -9,7 +10,7 @@ export const infantCarSeatProducts: Product[] = [
     name: "Mesa V2",
     brand: "UPPAbaby",
     category: "infant-car-seat",
-    image: placeholderImage,
+    image: mesaV2Image,
     lifestyleTags: ["design-forward"],
     verdict: "buy",
     bestFor: "UPPAbaby stroller owners who want seamless compatibility",
