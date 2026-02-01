@@ -6,6 +6,7 @@ import { SettingsPopover } from "@/components/studio/SettingsPopover";
 import nuraIcon from "@/assets/nura-icon.png";
 
 const navItems = [
+  { name: "Home", href: "/" },
   { name: "The Studio", href: "/studio" },
   { name: "Community", href: "#community" },
 ];
