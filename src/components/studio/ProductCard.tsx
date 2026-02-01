@@ -6,9 +6,10 @@ interface ProductCardProps {
   offset: number; // -2, -1, 0, 1, 2
   isActive: boolean;
   onClick: () => void;
+  onDetailOpen?: (product: Product) => void;
 }
 
-export function ProductCard({ product, offset, isActive, onClick }: ProductCardProps) {
+export function ProductCard({ product, offset, isActive, onClick, onDetailOpen }: ProductCardProps) {
   // Calculate transform properties based on offset
   const absOffset = Math.abs(offset);
   const scale = 1 - absOffset * 0.08;
@@ -21,10 +22,20 @@ export function ProductCard({ product, offset, isActive, onClick }: ProductCardP
   // Placeholder gradient for products without images
   const hasImage = product.image && product.image.length > 0;
 
+  const handleClick = () => {
+    if (isActive && onDetailOpen) {
+      // If active card is clicked, open detail drawer
+      onDetailOpen(product);
+    } else {
+      // Otherwise navigate to this card
+      onClick();
+    }
+  };
+
   return (
     <motion.div
       layout
-      onClick={onClick}
+      onClick={handleClick}
       className="absolute left-1/2 cursor-pointer"
       style={{
         zIndex,

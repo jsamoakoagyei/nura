@@ -6,9 +6,10 @@ interface CategorySectionProps {
   title: string;
   products: Product[];
   id: string;
+  onDetailOpen?: (product: Product) => void;
 }
 
-export function CategorySection({ title, products, id }: CategorySectionProps) {
+export function CategorySection({ title, products, id, onDetailOpen }: CategorySectionProps) {
   if (products.length === 0) {
     return null;
   }
@@ -31,7 +32,7 @@ export function CategorySection({ title, products, id }: CategorySectionProps) {
       </div>
 
       {/* Carousel */}
-      <ProductCarousel products={products} id={id} />
+      <ProductCarousel products={products} id={id} onDetailOpen={onDetailOpen} />
     </motion.section>
   );
 }
