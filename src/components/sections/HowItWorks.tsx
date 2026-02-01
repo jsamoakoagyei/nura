@@ -45,7 +45,7 @@ export function HowItWorks() {
               transition={{ delay: 0.1 }}
               className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold text-foreground"
             >
-              How NURTURR works
+              How nura works
             </motion.h2>
           </div>
 

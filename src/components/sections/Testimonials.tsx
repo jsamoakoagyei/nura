@@ -3,7 +3,7 @@ import { Star, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    quote: "NURTURR completely changed how I approached my pregnancy. The Studio reviews saved me from so many impulse purchases, and the community made me feel less alone.",
+    quote: "nura completely changed how I approached my pregnancy. The Studio reviews saved me from so many impulse purchases, and the community made me feel less alone.",
     author: "Sarah M.",
     role: "First-time Mom",
     avatar: "S",

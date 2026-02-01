@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Menu, X, Search, Bell, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import nuraIcon from "@/assets/nura-icon.png";
 
 const navItems = [
   { name: "Studio", href: "#studio" },
@@ -24,10 +25,8 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <a href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-serif font-bold text-xl">N</span>
-            </div>
-            <span className="font-serif font-semibold text-xl text-foreground">NURTURR</span>
+            <img src={nuraIcon} alt="nura" className="w-10 h-10 rounded-2xl" />
+            <span className="font-serif font-semibold text-xl text-foreground">nura</span>
           </a>
 
           {/* Desktop Navigation */}
