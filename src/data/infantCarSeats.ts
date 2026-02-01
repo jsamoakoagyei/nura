@@ -1,5 +1,6 @@
 import type { Product } from "./products";
 import mesaV2Image from "@/assets/car-seats/mesa-v2.png";
+import cloudGImage from "@/assets/car-seats/cloud-g.png";
 
 // Placeholder gradient images until real assets are added
 const placeholderImage = "";
@@ -31,7 +32,7 @@ export const infantCarSeatProducts: Product[] = [
     name: "Cloud G",
     brand: "Cybex",
     category: "infant-car-seat",
-    image: placeholderImage,
+    image: cloudGImage,
     lifestyleTags: ["design-forward", "eco-conscious"],
     verdict: "buy",
     bestFor: "Parents prioritizing lie-flat ergonomics and premium safety",
