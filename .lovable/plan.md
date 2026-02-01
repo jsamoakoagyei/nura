@@ -1,48 +1,41 @@
 
-# Add UPPAbaby Cruz V2 Product Image
+# Connect "See how nura works" Button to Section
 
 ## Overview
-Replace the placeholder Unsplash image for the UPPAbaby Cruz V2 stroller with the real product photo you've uploaded.
+Link the hero button to smoothly scroll down to the "How It Works" section when clicked.
 
 ## Implementation Steps
 
-### 1. Create Stroller Assets Directory
-Create a new folder at `src/assets/strollers/` to organize all stroller product images.
+### 1. Add Section ID
+Add an `id="how-it-works"` attribute to the HowItWorks section element so it can be targeted by anchor links.
 
-### 2. Copy Uploaded Images
-Copy both uploaded images to the project:
-- `user-uploads://Bugaboo_Butterfly.png` → `src/assets/strollers/butterfly.png`
-- `user-uploads://UPPAbaby_Cruz_V2.png` → `src/assets/strollers/cruz-v2.png`
-
-### 3. Update Strollers Data File
-Modify `src/data/strollers.ts` to:
-- Add import statements for both images at the top of the file
-- Replace the Unsplash URLs with the imported image references
-
-```text
-Before (line 35):
-  image: "https://images.unsplash.com/photo-1623018035782-b269248df916?w=600&h=600&fit=crop"
-
-After:
-  image: butterflyImage
-
-Before (line 51):
-  image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=600&h=600&fit=crop"
-
-After:
-  image: cruzV2Image
+**File:** `src/components/sections/HowItWorks.tsx`
+```
+Line 34: <section className="py-24 lg:py-32 bg-azure-50">
+       ↓
+Line 34: <section id="how-it-works" className="py-24 lg:py-32 bg-azure-50">
 ```
 
-## Technical Details
+### 2. Add Scroll Behavior to Button
+Wrap the button in an anchor tag or add an onClick handler to scroll smoothly to the section.
 
-- Using ES module imports ensures proper bundling and optimization by Vite
-- No changes needed to StrollerCard component - it already accepts image paths via the `src` attribute
+**File:** `src/components/sections/Hero.tsx`
+```
+Line 114-116:
+  <Button variant="hero-outline" size="xl">
+    See how nura works
+  </Button>
+       ↓
+  <Button 
+    variant="hero-outline" 
+    size="xl"
+    onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+  >
+    See how nura works
+  </Button>
+```
 
-## Remaining Images
-
-After this update, 3 strollers will still need real product images:
-- UPPAbaby Vista V2
-- Babyzen YOYO²
-- Bugaboo Donkey 5
-
-Upload these when ready and I'll integrate them the same way.
+## Technical Notes
+- Uses native `scrollIntoView` with smooth behavior for a polished scroll animation
+- No additional dependencies needed
+- Works across all modern browsers
