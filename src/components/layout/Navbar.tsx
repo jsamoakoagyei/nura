@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import nuraIcon from "@/assets/nura-icon.png";
 
 const navItems = [
-  { name: "Reviews", href: "#shop" },
+  { name: "The Studio", href: "/studio" },
   { name: "Community", href: "#community" },
 ];
 
