@@ -3,6 +3,7 @@ import mesaV2Image from "@/assets/car-seats/mesa-v2.png";
 import cloudGImage from "@/assets/car-seats/cloud-g.png";
 import doonaPlusImage from "@/assets/car-seats/doona-plus.png";
 import pipaUrbnImage from "@/assets/car-seats/pipa-urbn.png";
+import atonG2Image from "@/assets/car-seats/aton-g2.png";
 
 // Placeholder gradient images until real assets are added
 const placeholderImage = "";
@@ -97,7 +98,7 @@ export const infantCarSeatProducts: Product[] = [
     name: "Aton G2",
     brand: "Cybex",
     category: "infant-car-seat",
-    image: placeholderImage,
+    image: atonG2Image,
     lifestyleTags: ["budget-conscious", "apartment-friendly"],
     verdict: "depends",
     bestFor: "Parents wanting Cybex quality at an entry-level price",
