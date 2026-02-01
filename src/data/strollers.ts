@@ -1,3 +1,7 @@
+import butterflyImage from "../assets/strollers/butterfly.png";
+import cruzV2Image from "../assets/strollers/cruz-v2.png";
+import yoyo2Image from "../assets/strollers/yoyo2.png";
+
 export interface Stroller {
   id: string;
   name: string;
@@ -32,7 +36,7 @@ export const strollers: Stroller[] = [
     id: "butterfly",
     name: "Butterfly",
     brand: "Bugaboo",
-    image: "https://images.unsplash.com/photo-1623018035782-b269248df916?w=600&h=600&fit=crop",
+    image: butterflyImage,
     highlights: [
       "Ultra-compact fold",
       "Lighter for travel",
@@ -48,7 +52,7 @@ export const strollers: Stroller[] = [
     id: "cruz-v2",
     name: "Cruz V2",
     brand: "UPPAbaby",
-    image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=600&h=600&fit=crop",
+    image: cruzV2Image,
     highlights: [
       "Good balance of size and features",
       "Narrower for tight spaces",
@@ -64,7 +68,7 @@ export const strollers: Stroller[] = [
     id: "yoyo2",
     name: "YOYO²",
     brand: "Babyzen",
-    image: "https://images.unsplash.com/photo-1504173010664-32509aeebb62?w=600&h=600&fit=crop",
+    image: yoyo2Image,
     highlights: [
       "One-hand fold",
       "Cabin-bag approved",
