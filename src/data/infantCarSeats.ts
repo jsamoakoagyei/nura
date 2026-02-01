@@ -1,6 +1,7 @@
 import type { Product } from "./products";
 import mesaV2Image from "@/assets/car-seats/mesa-v2.png";
 import cloudGImage from "@/assets/car-seats/cloud-g.png";
+import doonaPlusImage from "@/assets/car-seats/doona-plus.png";
 
 // Placeholder gradient images until real assets are added
 const placeholderImage = "";
@@ -53,7 +54,7 @@ export const infantCarSeatProducts: Product[] = [
     name: "Doona+",
     brand: "Doona",
     category: "infant-car-seat",
-    image: placeholderImage,
+    image: doonaPlusImage,
     lifestyleTags: ["travel-heavy", "apartment-friendly"],
     verdict: "buy",
     bestFor: "Urban parents who want an all-in-one car seat + stroller solution",
