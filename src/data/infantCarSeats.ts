@@ -93,8 +93,8 @@ export const infantCarSeatProducts: Product[] = [
     },
   },
   {
-    id: "aton-2",
-    name: "Aton 2",
+    id: "aton-g2",
+    name: "Aton G2",
     brand: "Cybex",
     category: "infant-car-seat",
     image: placeholderImage,
