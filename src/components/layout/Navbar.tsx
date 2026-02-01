@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Menu, X, Search, Bell, User } from "lucide-react";
+import { Menu, X, Search, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SettingsPopover } from "@/components/studio/SettingsPopover";
+import { UserMenu } from "@/components/layout/UserMenu";
 import nuraIcon from "@/assets/nura-icon.png";
 
 const navItems = [
@@ -51,11 +52,7 @@ export function Navbar() {
               <Bell className="w-5 h-5" />
             </Button>
             <SettingsPopover />
-            <Button variant="soft" className="gap-2">
-              <User className="w-4 h-4" />
-              Sign In
-            </Button>
-            <Button>Get Started</Button>
+            <UserMenu />
           </div>
 
           {/* Mobile Menu Button */}
