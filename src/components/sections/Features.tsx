@@ -1,31 +1,18 @@
 import { motion } from "framer-motion";
 import { 
-  FlaskConical, 
   ShoppingBag, 
   MessageCircle, 
-  Stethoscope,
   ArrowRight,
-  Star,
   CheckCircle,
-  Users
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const features = [
   {
-    icon: FlaskConical,
-    title: "Baby Gear Studio",
-    description: "Independent, research-driven product reviews and comparisons. Side-by-side testing across safety, durability, ease of use, and value.",
-    highlights: ["Expert Testing", "Video Demos", "Recall Alerts"],
-    color: "bg-azure-100 text-azure-600",
-    href: "#studio",
-  },
-  {
     icon: ShoppingBag,
-    title: "Curated Marketplace",
-    description: "Shop only Studio-tested and community-validated products. Stage-based bundles make it easy to get exactly what you need.",
-    highlights: ["Vetted Products", "Stage Bundles", "Registry"],
-    color: "bg-blush-100 text-rose-500",
+    title: "The Baby Gear Studio",
+    description: "Independent, research-driven product reviews meet a curated marketplace. Side-by-side testing, real parent insights, and vetted products you can shop with confidence.",
+    highlights: ["Expert Testing", "Vetted Products", "Stage Bundles", "Registry"],
+    color: "bg-azure-100 text-azure-600",
     href: "#shop",
   },
   {
@@ -35,14 +22,6 @@ const features = [
     highlights: ["Stage-Based", "Anonymous Option", "Expert Q&A"],
     color: "bg-cream-200 text-amber-600",
     href: "#community",
-  },
-  {
-    icon: Stethoscope,
-    title: "Trusted Care Directory",
-    description: "Find verified medical and wellness professionals. From pediatricians to lactation consultants, all credentials verified.",
-    highlights: ["Verified Providers", "Real Reviews", "Easy Booking"],
-    color: "bg-azure-100 text-azure-600",
-    href: "#care",
   },
 ];
 
@@ -79,7 +58,7 @@ export function Features() {
             viewport={{ once: true }}
             className="text-primary font-medium mb-4 block"
           >
-            Four Pillars of Support
+            Two Pillars of Support
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -99,7 +78,7 @@ export function Features() {
             transition={{ delay: 0.2 }}
             className="text-lg text-muted-foreground"
           >
-            No more juggling apps. nura brings together expert guidance, vetted commerce, peer support, and care provider access.
+            No more juggling apps. nura brings together expert guidance, vetted commerce, and peer support.
           </motion.p>
         </div>
 
