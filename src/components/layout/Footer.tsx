@@ -3,7 +3,7 @@ import nuraIcon from "@/assets/nura-icon.png";
 
 const footerLinks = {
   product: [
-    { name: "Trusted Reviews", href: "#shop" },
+    { name: "The Studio", href: "/studio" },
     { name: "Community", href: "#community" },
   ],
   company: [
