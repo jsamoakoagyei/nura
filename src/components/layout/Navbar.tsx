@@ -8,7 +8,7 @@ import nuraIcon from "@/assets/nura-icon.png";
 const navItems = [
   { name: "Home", href: "/" },
   { name: "The Studio", href: "/studio" },
-  { name: "Community", href: "#community" },
+  { name: "Community", href: "/community" },
 ];
 
 export function Navbar() {
