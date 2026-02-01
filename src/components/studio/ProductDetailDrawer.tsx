@@ -18,6 +18,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { feedbackSave, feedbackUnsave } from "@/lib/feedback";
 
 interface ProductDetailDrawerProps {
   product: Product | null;
@@ -189,7 +190,14 @@ export function ProductDetailDrawer({
 
             {/* Save Button (Full width) */}
             <Button
-              onClick={onToggleSave}
+              onClick={() => {
+                if (isSaved) {
+                  feedbackUnsave();
+                } else {
+                  feedbackSave();
+                }
+                onToggleSave();
+              }}
               variant={isSaved ? "outline" : "default"}
               className="w-full h-12"
             >
