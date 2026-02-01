@@ -1,3 +1,5 @@
+import { getGlobalFeedbackSettings } from "@/hooks/useFeedbackSettings";
+
 // Haptic feedback patterns
 const HAPTIC_PATTERNS = {
   light: [10],
@@ -13,6 +15,9 @@ type HapticPattern = keyof typeof HAPTIC_PATTERNS;
  * Trigger haptic feedback on supported devices
  */
 export function triggerHaptic(pattern: HapticPattern = "medium") {
+  const { hapticEnabled } = getGlobalFeedbackSettings();
+  if (!hapticEnabled) return;
+
   if (typeof navigator !== "undefined" && "vibrate" in navigator) {
     try {
       navigator.vibrate(HAPTIC_PATTERNS[pattern]);
@@ -56,6 +61,9 @@ interface ToneOptions {
  * Play a simple synthesized tone
  */
 function playTone(options: ToneOptions) {
+  const { soundEnabled } = getGlobalFeedbackSettings();
+  if (!soundEnabled) return;
+
   const ctx = getAudioContext();
   if (!ctx) return;
 
