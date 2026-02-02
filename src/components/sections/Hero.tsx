@@ -114,7 +114,11 @@ export function Hero() {
                 <ArrowRight className="w-5 h-5 ml-1" />
               </Link>
             </Button>
-            <Button variant="hero-outline" size="xl">
+            <Button 
+              variant="hero-outline" 
+              size="xl"
+              onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+            >
               See how nura works
             </Button>
           </motion.div>
