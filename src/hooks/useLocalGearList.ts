@@ -23,7 +23,10 @@ export function useLocalGearList() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(savedProducts));
     } catch (error) {
-      console.error("Failed to save gear list:", error);
+      // Only log errors in development to avoid exposing internal details in production
+      if (import.meta.env.DEV) {
+        console.error("Failed to save gear list:", error);
+      }
     }
   }, [savedProducts]);
 
