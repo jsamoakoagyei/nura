@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Heart, Users } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
@@ -107,9 +108,11 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
           >
-            <Button variant="hero" size="xl">
-              Start Your Journey
-              <ArrowRight className="w-5 h-5 ml-1" />
+            <Button variant="hero" size="xl" asChild>
+              <Link to="/profile">
+                Start Your Journey
+                <ArrowRight className="w-5 h-5 ml-1" />
+              </Link>
             </Button>
             <Button variant="hero-outline" size="xl">
               See how nura works
