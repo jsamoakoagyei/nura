@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Users, Baby, Heart, ShieldCheck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -97,9 +98,11 @@ export function HowItWorks() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <Button variant="hero" size="xl">
-              Start Your Journey
-              <ArrowRight className="w-5 h-5 ml-1" />
+            <Button variant="hero" size="xl" asChild>
+              <Link to="/profile">
+                Start Your Journey
+                <ArrowRight className="w-5 h-5 ml-1" />
+              </Link>
             </Button>
           </motion.div>
         </div>
