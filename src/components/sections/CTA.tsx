@@ -1,27 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-
-// Bubble component for CTA section
-function CTABubble({ className, delay = 0, size = 40 }: { className?: string; delay?: number; size?: number }) {
-  return (
-    <motion.div
-      initial={{ y: "100%", opacity: 0 }}
-      animate={{ 
-        y: "-100vh", 
-        opacity: [0, 0.3, 0.4, 0.3, 0],
-      }}
-      transition={{ 
-        duration: 12, 
-        delay,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-      className={`absolute rounded-full bg-white/10 backdrop-blur-sm border border-white/20 ${className}`}
-      style={{ width: size, height: size }}
-    />
-  );
-}
+import { WatercolorCloud } from "@/components/decorations/WatercolorCloud";
 
 export function CTA() {
   return (
@@ -29,15 +9,13 @@ export function CTA() {
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary via-azure-500 to-azure-600" />
       
-      {/* Decorative Bubbles */}
+      {/* Watercolor Clouds */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <CTABubble className="left-[10%]" delay={0} size={80} />
-        <CTABubble className="left-[25%]" delay={2} size={40} />
-        <CTABubble className="left-[50%]" delay={1} size={60} />
-        <CTABubble className="left-[75%]" delay={3} size={50} />
-        <CTABubble className="left-[90%]" delay={1.5} size={35} />
-        <CTABubble className="left-[5%]" delay={4} size={45} />
-        <CTABubble className="left-[60%]" delay={5} size={70} />
+        <WatercolorCloud className="top-[5%] left-[5%]" variant="white" size="xl" delay={0} />
+        <WatercolorCloud className="top-[15%] right-[8%]" variant="white" size="lg" delay={1.5} />
+        <WatercolorCloud className="bottom-[10%] left-[10%]" variant="white" size="md" delay={2} />
+        <WatercolorCloud className="bottom-[20%] right-[15%]" variant="white" size="lg" delay={0.5} />
+        <WatercolorCloud className="top-[50%] left-[40%]" variant="white" size="sm" delay={3} />
       </div>
       
       {/* Static decorative elements */}

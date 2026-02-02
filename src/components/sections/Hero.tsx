@@ -2,29 +2,8 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Heart, Users } from "lucide-react";
+import { WatercolorCloud } from "@/components/decorations/WatercolorCloud";
 import heroBg from "@/assets/hero-bg.jpg";
-
-// Bubble component for decorative background
-function Bubble({ className, delay = 0, duration = 8, size = 40 }: { className?: string; delay?: number; duration?: number; size?: number }) {
-  return (
-    <motion.div
-      initial={{ y: "100%", opacity: 0, scale: 0.5 }}
-      animate={{ 
-        y: "-100vh", 
-        opacity: [0, 0.4, 0.6, 0.4, 0],
-        scale: [0.5, 0.8, 1, 0.9, 0.7]
-      }}
-      transition={{ 
-        duration, 
-        delay,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-      className={`absolute rounded-full bg-gradient-to-br from-azure-200/40 to-azure-400/20 backdrop-blur-sm border border-azure-200/30 ${className}`}
-      style={{ width: size, height: size }}
-    />
-  );
-}
 
 export function Hero() {
   return (
@@ -39,18 +18,13 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/30 to-background" />
       </div>
 
-      {/* Floating Bubbles */}
+      {/* Watercolor Clouds */}
       <div className="absolute inset-0 z-[1] overflow-hidden pointer-events-none">
-        <Bubble className="left-[5%]" delay={0} duration={10} size={60} />
-        <Bubble className="left-[15%]" delay={2} duration={12} size={30} />
-        <Bubble className="left-[25%]" delay={1} duration={9} size={45} />
-        <Bubble className="left-[40%]" delay={3} duration={11} size={25} />
-        <Bubble className="left-[55%]" delay={0.5} duration={10} size={50} />
-        <Bubble className="left-[70%]" delay={2.5} duration={13} size={35} />
-        <Bubble className="left-[80%]" delay={1.5} duration={9} size={40} />
-        <Bubble className="left-[90%]" delay={4} duration={12} size={28} />
-        <Bubble className="left-[35%]" delay={5} duration={14} size={55} />
-        <Bubble className="left-[65%]" delay={6} duration={11} size={32} />
+        <WatercolorCloud className="top-[5%] left-[5%]" size="xl" delay={0} />
+        <WatercolorCloud className="top-[10%] right-[10%]" size="lg" delay={1} />
+        <WatercolorCloud className="top-[40%] left-[2%]" size="md" delay={2} />
+        <WatercolorCloud className="bottom-[20%] right-[5%]" size="lg" delay={1.5} />
+        <WatercolorCloud className="top-[60%] left-[60%]" size="sm" delay={3} />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
