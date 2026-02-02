@@ -1,193 +1,117 @@
 
-# Phase 2: Product Detail Drawer, Save Functionality & Compare Feature
+# Rebrand: nura → The Little Voyage
 
-## Overview
-Build on Phase 1's foundation to add interactive product exploration with a slide-up detail drawer, save-to-list functionality with a floating "My Gear" drawer, and a comparison feature for viewing up to 3 products side-by-side.
-
----
-
-## What You'll Get
-
-**Product Detail Drawer**
-- Slide-up drawer when tapping a product card
-- Structured review sections with ratings
-- Full specs display
-- Save/unsave button with heart icon
-
-**My Gear List (Floating Drawer)**
-- Floating action button showing saved count
-- Bottom drawer with saved products grid
-- Quick remove functionality
-- "Compare" button when 2-3 items saved
-
-**Compare Feature**
-- Side-by-side comparison of up to 3 products
-- Synced specs rows for easy comparison
-- Verdict badges and key highlights
-- Full-screen drawer/dialog experience
+This plan covers renaming the site from "nura" to "The Little Voyage", updating the hero messaging, and integrating your new cloud logo.
 
 ---
 
-## New Files to Create
+## Summary of Changes
 
-```text
-src/components/studio/
-  ProductDetailDrawer.tsx      - Slide-up drawer with full product details
-  SaveButton.tsx               - Heart icon save/unsave button
-  MyGearFAB.tsx                - Floating action button with badge
-  MyGearDrawer.tsx             - Saved products drawer
-  CompareDrawer.tsx            - Side-by-side comparison view
-  CompareProductCard.tsx       - Compact card for comparison grid
-```
+### 1. New Logo Asset
+**Action:** Copy the uploaded cloud icon to the project assets folder.
+
+| Location | Details |
+|----------|---------|
+| Source | `user-uploads://cloud_icon_TLV.png` |
+| Destination | `src/assets/tlv-logo.png` |
+| Usage | Navbar, Footer, Auth page |
 
 ---
 
-## Files to Modify
+### 2. Hero Section - New Messaging
+**File:** `src/components/sections/Hero.tsx`
+
+| Element | Current | New |
+|---------|---------|-----|
+| Headline | "Parenthood is full of decisions. nura helps you make the right ones." | "Navigating early parenthood, together." |
+| Subheadline | "Real-world reviews, expert insight..." | "Thoughtfully tested essentials and trusted guidance for life with little ones." |
+| Support text | "Built for expecting and new parents..." | Two-paragraph subtext (see below) |
+| Button text | "See how nura works" | "See how it works" |
+
+**New Support Text:**
+> Parenthood is a journey—one filled with questions, choices, and quiet moments of doubt.
+> The Little Voyage exists to gently guide you through it, with carefully researched reviews, honest recommendations, and a steady hand when you need it most.
+
+---
+
+### 3. Brand Name Updates Across All Files
 
 | File | Changes |
 |------|---------|
-| `src/pages/Studio.tsx` | Add gear list state provider, floating FAB, drawers |
-| `src/components/studio/ProductCard.tsx` | Add tap handler for detail drawer |
-| `src/components/studio/ProductHighlightPanel.tsx` | Add save button |
-| `src/data/products.ts` | Add ReviewSection data to products (optional enhancement) |
+| `index.html` | Title: "The Little Voyage - Navigating Early Parenthood, Together"<br>Meta description, og:title, author updated |
+| `src/components/layout/Navbar.tsx` | Logo image, brand text "The Little Voyage" |
+| `src/components/layout/Footer.tsx` | Logo image, brand text, copyright |
+| `src/pages/Auth.tsx` | Logo image, brand text |
+| `src/components/sections/HowItWorks.tsx` | "How it works" (section title), step 1 description |
+| `src/components/sections/Features.tsx` | "The Little Voyage brings together..." |
+| `src/components/sections/Testimonials.tsx` | Update testimonial quote |
 
 ---
 
-## User Flow
+### 4. Internal Storage Keys
+These are not visible to users but will be updated for consistency:
 
+| File | Old Key | New Key |
+|------|---------|---------|
+| `src/hooks/useLocalGearList.ts` | `nura-gear-list` | `tlv-gear-list` |
+| `src/hooks/useFeedbackSettings.ts` | `nura-feedback-settings` | `tlv-feedback-settings` |
+
+---
+
+## File-by-File Changes
+
+### index.html
 ```text
-1. User browses carousel
-   └── Tap card → ProductDetailDrawer opens
-       └── Tap "Save" → Added to gear list
-           └── FAB shows count badge
-
-2. User taps FAB
-   └── MyGearDrawer opens
-       └── View saved items
-       └── Remove items
-       └── Tap "Compare" (if 2-3 items) → CompareDrawer opens
-
-3. Compare view
-   └── Side-by-side specs
-   └── Close to return to studio
+title: "The Little Voyage - Navigating Early Parenthood, Together"
+description: "Thoughtfully tested essentials and trusted guidance for life with little ones."
+og:title: "The Little Voyage - Navigating Early Parenthood, Together"
+author: "The Little Voyage"
+keywords: updated to match new branding
 ```
 
----
+### Navbar.tsx
+- Import new logo from `@/assets/tlv-logo.png`
+- Change brand text from "nura" to "The Little Voyage"
+- Update alt text accordingly
 
-## Component Details
+### Footer.tsx
+- Import new logo from `@/assets/tlv-logo.png`
+- Change brand text and copyright to "The Little Voyage"
 
-### ProductDetailDrawer
-- Uses Vaul drawer (already installed)
-- Shows product image at top
-- Verdict badge + best for/not for
-- Expandable review sections
-- Save button prominently placed
+### Auth.tsx
+- Import new logo
+- Update brand text and alt attributes
 
-### SaveButton
-- Heart icon (outline = unsaved, filled = saved)
-- Animated state change
-- Uses `useLocalGearList` hook
+### Hero.tsx
+- Replace headline, subheadline, and support text with your new copy
+- Change "See how nura works" button to "See how it works"
 
-### MyGearFAB
-- Fixed position bottom-right
-- Badge showing count (hidden if 0)
-- Opens MyGearDrawer on tap
+### HowItWorks.tsx
+- Section title: "How nura works" → "How it works"
+- Step 1 description: "nura curates..." → "The Little Voyage curates..."
 
-### MyGearDrawer
-- Bottom sheet with saved products
-- Grid of compact product cards
-- Remove button per item
-- "Compare Selected" button (enabled with 2-3 items)
+### Features.tsx
+- Line 81: "No more juggling apps. nura brings together..." → "No more juggling apps. The Little Voyage brings together..."
 
-### CompareDrawer
-- Full-screen drawer or dialog
-- Products in columns
-- Rows: Image, Name, Verdict, Best For, each spec
-- Highlight differences
+### Testimonials.tsx
+- First testimonial: "nura completely changed..." → "The Little Voyage completely changed..."
+
+### useLocalGearList.ts & useFeedbackSettings.ts
+- Update storage key constants
 
 ---
 
-## Implementation Sequence
+## Files to Be Modified
 
-1. **Create SaveButton component**
-   - Heart icon with animation
-   - Connect to useLocalGearList hook
+1. **New file:** `src/assets/tlv-logo.png` (copied from upload)
+2. `index.html`
+3. `src/components/sections/Hero.tsx`
+4. `src/components/layout/Navbar.tsx`
+5. `src/components/layout/Footer.tsx`
+6. `src/pages/Auth.tsx`
+7. `src/components/sections/HowItWorks.tsx`
+8. `src/components/sections/Features.tsx`
+9. `src/components/sections/Testimonials.tsx`
+10. `src/hooks/useLocalGearList.ts`
+11. `src/hooks/useFeedbackSettings.ts`
 
-2. **Create ProductDetailDrawer**
-   - Vaul drawer with product details
-   - Integrate SaveButton
-   - Review sections with optional ratings
-
-3. **Update ProductCard**
-   - Add onDetailOpen callback
-   - Pass to parent for drawer control
-
-4. **Create MyGearFAB**
-   - Floating button with count badge
-   - Fixed positioning
-
-5. **Create MyGearDrawer**
-   - List of saved products
-   - Remove functionality
-   - Compare button logic
-
-6. **Create CompareDrawer**
-   - Side-by-side layout
-   - Specs comparison table
-   - Mobile-friendly scrolling
-
-7. **Wire up Studio page**
-   - Add state for active product (detail drawer)
-   - Add state for compare selection
-   - Render all drawer components
-
----
-
-## Technical Notes
-
-- Uses existing Vaul drawer component for smooth mobile UX
-- localStorage persistence via `useLocalGearList` (already built)
-- Maximum 3 items for comparison (enforced in UI)
-- All drawers use consistent spring physics
-- Mobile-first responsive design
-- Heart animation uses Framer Motion scale/fill transition
-
----
-
-## Visual Reference
-
-**Detail Drawer Layout:**
-```text
-┌─────────────────────────────┐
-│  ─────  (drag handle)       │
-│                             │
-│  [  Product Image  ]        │
-│                             │
-│  Brand · [Buy Badge]        │
-│  Product Name               │
-│                             │
-│  ✓ Best for: ...           │
-│  ✗ Not for: ...            │
-│                             │
-│  ▸ Design & Build          │
-│  ▸ Daily Use               │
-│  ▸ Value                   │
-│                             │
-│  [ ♡ Save to My Gear ]     │
-└─────────────────────────────┘
-```
-
-**Compare Layout:**
-```text
-┌─────────────────────────────────────┐
-│  Compare (3)              [Close]   │
-├───────────┬───────────┬─────────────┤
-│  [Image]  │  [Image]  │  [Image]    │
-│  Vista V2 │  Cruz V2  │  Butterfly  │
-│  [Buy]    │  [Buy]    │  [Buy]      │
-├───────────┼───────────┼─────────────┤
-│  27 lbs   │  23 lbs   │  16.1 lbs   │  Weight
-│  17x25x33 │  17x25x33 │  17x9x21    │  Folded
-│  0-50 lbs │  0-50 lbs │  6m-50 lbs  │  Age
-└───────────┴───────────┴─────────────┘
-```
