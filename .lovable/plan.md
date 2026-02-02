@@ -1,117 +1,89 @@
 
-# Rebrand: nura → The Little Voyage
+# Replace Bubbles with Watercolor Clouds
 
-This plan covers renaming the site from "nura" to "The Little Voyage", updating the hero messaging, and integrating your new cloud logo.
+## Overview
+Replace the animated bubble decorations with soft, faint watercolor-style clouds that create a dreamy, nurturing aesthetic. The clouds will be static or gently animated to provide a calming visual without the rising bubble motion.
 
----
+## Sections to Update
 
-## Summary of Changes
+### 1. Hero Section (`src/components/sections/Hero.tsx`)
+- Remove the `Bubble` component (lines 7-27)
+- Remove the floating bubbles container (lines 42-54)
+- Add new `WatercolorCloud` component with:
+  - SVG-based cloud shapes with soft, organic edges
+  - Watercolor effect using gradients and blur filters
+  - Subtle opacity and gentle floating animation
+  - Multiple clouds positioned at various locations
 
-### 1. New Logo Asset
-**Action:** Copy the uploaded cloud icon to the project assets folder.
+### 2. CTA Section (`src/components/sections/CTA.tsx`)
+- Remove the `CTABubble` component (lines 6-24)
+- Remove the decorative bubbles container (lines 33-41)
+- Add watercolor clouds with white/light styling to match the blue gradient background
 
-| Location | Details |
-|----------|---------|
-| Source | `user-uploads://cloud_icon_TLV.png` |
-| Destination | `src/assets/tlv-logo.png` |
-| Usage | Navbar, Footer, Auth page |
+### 3. Create Reusable Cloud Component
+Create a new shared component `src/components/decorations/WatercolorCloud.tsx`:
+- Accept props for position, size, color variant, and animation delay
+- Use SVG paths for organic cloud shapes
+- Apply CSS filters for watercolor effect (blur, opacity gradients)
+- Support both light mode (azure tones) and dark/CTA variant (white tones)
 
----
+## Visual Design
 
-### 2. Hero Section - New Messaging
-**File:** `src/components/sections/Hero.tsx`
+**Cloud Appearance:**
+- Soft, irregular edges (not perfectly round)
+- Gradient fills from azure-200 to transparent
+- Multiple blur layers for watercolor "bleeding" effect
+- Very low opacity (0.15-0.35) for subtlety
 
-| Element | Current | New |
-|---------|---------|-----|
-| Headline | "Parenthood is full of decisions. nura helps you make the right ones." | "Navigating early parenthood, together." |
-| Subheadline | "Real-world reviews, expert insight..." | "Thoughtfully tested essentials and trusted guidance for life with little ones." |
-| Support text | "Built for expecting and new parents..." | Two-paragraph subtext (see below) |
-| Button text | "See how nura works" | "See how it works" |
+**Animation:**
+- Gentle horizontal drift (3-5px movement)
+- Slow, organic motion (15-25 second duration)
+- No vertical rising motion
 
-**New Support Text:**
-> Parenthood is a journey—one filled with questions, choices, and quiet moments of doubt.
-> The Little Voyage exists to gently guide you through it, with carefully researched reviews, honest recommendations, and a steady hand when you need it most.
+## Cloud Positions
 
----
+**Hero Section:**
+- Top-left corner: Large cloud, low opacity
+- Top-right area: Medium cloud
+- Middle-left: Small wispy cloud
+- Bottom-right: Medium-large cloud
 
-### 3. Brand Name Updates Across All Files
-
-| File | Changes |
-|------|---------|
-| `index.html` | Title: "The Little Voyage - Navigating Early Parenthood, Together"<br>Meta description, og:title, author updated |
-| `src/components/layout/Navbar.tsx` | Logo image, brand text "The Little Voyage" |
-| `src/components/layout/Footer.tsx` | Logo image, brand text, copyright |
-| `src/pages/Auth.tsx` | Logo image, brand text |
-| `src/components/sections/HowItWorks.tsx` | "How it works" (section title), step 1 description |
-| `src/components/sections/Features.tsx` | "The Little Voyage brings together..." |
-| `src/components/sections/Testimonials.tsx` | Update testimonial quote |
-
----
-
-### 4. Internal Storage Keys
-These are not visible to users but will be updated for consistency:
-
-| File | Old Key | New Key |
-|------|---------|---------|
-| `src/hooks/useLocalGearList.ts` | `nura-gear-list` | `tlv-gear-list` |
-| `src/hooks/useFeedbackSettings.ts` | `nura-feedback-settings` | `tlv-feedback-settings` |
+**CTA Section:**
+- Similar positioning with white-tinted clouds
+- Slightly higher opacity to show against blue gradient
 
 ---
 
-## File-by-File Changes
+## Technical Details
 
-### index.html
+### WatercolorCloud Component Structure
 ```text
-title: "The Little Voyage - Navigating Early Parenthood, Together"
-description: "Thoughtfully tested essentials and trusted guidance for life with little ones."
-og:title: "The Little Voyage - Navigating Early Parenthood, Together"
-author: "The Little Voyage"
-keywords: updated to match new branding
++------------------------------------------+
+|  WatercolorCloud Component               |
+|  Props:                                  |
+|  - className: positioning                |
+|  - variant: 'light' | 'white'            |
+|  - size: 'sm' | 'md' | 'lg' | 'xl'       |
+|  - delay: animation delay                |
++------------------------------------------+
+|  SVG with:                               |
+|  - Organic cloud path                    |
+|  - Gradient fill (radial)                |
+|  - Blur filter for watercolor effect     |
+|  - Framer Motion for gentle drift        |
++------------------------------------------+
 ```
 
-### Navbar.tsx
-- Import new logo from `@/assets/tlv-logo.png`
-- Change brand text from "nura" to "The Little Voyage"
-- Update alt text accordingly
+### CSS Approach
+- Use `filter: blur()` for soft edges
+- Radial gradients for color fading
+- `mix-blend-mode: multiply` or `soft-light` for watercolor blending
+- Very low opacity with transparency in gradients
 
-### Footer.tsx
-- Import new logo from `@/assets/tlv-logo.png`
-- Change brand text and copyright to "The Little Voyage"
+### Files to Modify
+1. Create: `src/components/decorations/WatercolorCloud.tsx`
+2. Update: `src/components/sections/Hero.tsx`
+3. Update: `src/components/sections/CTA.tsx`
 
-### Auth.tsx
-- Import new logo
-- Update brand text and alt attributes
-
-### Hero.tsx
-- Replace headline, subheadline, and support text with your new copy
-- Change "See how nura works" button to "See how it works"
-
-### HowItWorks.tsx
-- Section title: "How nura works" → "How it works"
-- Step 1 description: "nura curates..." → "The Little Voyage curates..."
-
-### Features.tsx
-- Line 81: "No more juggling apps. nura brings together..." → "No more juggling apps. The Little Voyage brings together..."
-
-### Testimonials.tsx
-- First testimonial: "nura completely changed..." → "The Little Voyage completely changed..."
-
-### useLocalGearList.ts & useFeedbackSettings.ts
-- Update storage key constants
-
----
-
-## Files to Be Modified
-
-1. **New file:** `src/assets/tlv-logo.png` (copied from upload)
-2. `index.html`
-3. `src/components/sections/Hero.tsx`
-4. `src/components/layout/Navbar.tsx`
-5. `src/components/layout/Footer.tsx`
-6. `src/pages/Auth.tsx`
-7. `src/components/sections/HowItWorks.tsx`
-8. `src/components/sections/Features.tsx`
-9. `src/components/sections/Testimonials.tsx`
-10. `src/hooks/useLocalGearList.ts`
-11. `src/hooks/useFeedbackSettings.ts`
-
+### Cleanup
+- Remove bubble-related keyframes from `tailwind.config.ts` if no longer needed
