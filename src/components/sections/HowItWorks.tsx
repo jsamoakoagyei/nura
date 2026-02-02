@@ -8,7 +8,7 @@ const steps = [
     number: "01",
     icon: Users,
     title: "Built from real parent experiences",
-    description: "nura curates in-depth reviews from parents who've actually used the product, across diverse family structures, budgets, and needs.",
+    description: "The Little Voyage curates in-depth reviews from parents who've actually used the product, across diverse family structures, budgets, and needs.",
   },
   {
     number: "02",
@@ -52,7 +52,7 @@ export function HowItWorks() {
               transition={{ delay: 0.1 }}
               className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold text-foreground"
             >
-              How nura works
+              How it works
             </motion.h2>
           </div>
 

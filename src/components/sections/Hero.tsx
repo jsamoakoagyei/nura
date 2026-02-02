@@ -76,9 +76,9 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="font-serif text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold tracking-tight text-foreground mb-6"
           >
-            Parenthood is full of decisions.
+            Navigating early parenthood,
             <br />
-            <span className="text-primary">nura</span> helps you make the right ones.
+            <span className="text-primary">together.</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -86,20 +86,25 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-4"
+            className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-6"
           >
-            Real-world reviews, expert insight, and parent-to-parent wisdom—without the noise, ads, or pressure.
+            Thoughtfully tested essentials and trusted guidance for life with little ones.
           </motion.p>
 
-          {/* Support Line */}
-          <motion.p
+          {/* Support Text - Two Paragraphs */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.25 }}
-            className="text-sm sm:text-base text-muted-foreground/80 max-w-xl mx-auto mb-10"
+            className="text-sm sm:text-base text-muted-foreground/80 max-w-xl mx-auto mb-10 space-y-3"
           >
-            Built for expecting and new parents navigating baby gear, services, and care with confidence.
-          </motion.p>
+            <p>
+              Parenthood is a journey—one filled with questions, choices, and quiet moments of doubt.
+            </p>
+            <p>
+              The Little Voyage exists to gently guide you through it, with carefully researched reviews, honest recommendations, and a steady hand when you need it most.
+            </p>
+          </motion.div>
 
           {/* CTA Buttons */}
           <motion.div
@@ -119,7 +124,7 @@ export function Hero() {
               size="xl"
               onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              See how nura works
+              See how it works
             </Button>
           </motion.div>
 

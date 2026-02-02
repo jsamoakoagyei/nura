@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-const STORAGE_KEY = "nura-feedback-settings";
+const STORAGE_KEY = "tlv-feedback-settings";
 
 interface FeedbackSettings {
   soundEnabled: boolean;

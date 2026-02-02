@@ -71,15 +71,15 @@ export function Features() {
             <br />
             <span className="text-primary">one trusted place</span>
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-lg text-muted-foreground"
-          >
-            No more juggling apps. nura brings together expert guidance, vetted commerce, and peer support.
-          </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-lg text-muted-foreground"
+            >
+              No more juggling apps. The Little Voyage brings together expert guidance, vetted commerce, and peer support.
+            </motion.p>
         </div>
 
         {/* Features Grid */}
