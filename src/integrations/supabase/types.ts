@@ -71,6 +71,13 @@ export type Database = {
             referencedRelation: "forum_comments"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "forum_comment_likes_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "forum_comments_secure"
+            referencedColumns: ["id"]
+          },
         ]
       }
       forum_comments: {
@@ -115,6 +122,13 @@ export type Database = {
             referencedRelation: "forum_posts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "forum_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "forum_posts_secure"
+            referencedColumns: ["id"]
+          },
         ]
       }
       forum_post_likes: {
@@ -142,6 +156,13 @@ export type Database = {
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "forum_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "forum_post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "forum_posts_secure"
             referencedColumns: ["id"]
           },
         ]
@@ -256,7 +277,110 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      forum_comments_secure: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          id: string | null
+          is_anonymous: boolean | null
+          is_hidden: boolean | null
+          likes_count: number | null
+          post_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          is_hidden?: boolean | null
+          likes_count?: number | null
+          post_id?: string | null
+          updated_at?: string | null
+          user_id?: never
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          is_hidden?: boolean | null
+          likes_count?: number | null
+          post_id?: string | null
+          updated_at?: string | null
+          user_id?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "forum_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "forum_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "forum_posts_secure"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      forum_posts_secure: {
+        Row: {
+          category_id: string | null
+          comments_count: number | null
+          content: string | null
+          created_at: string | null
+          id: string | null
+          is_anonymous: boolean | null
+          is_hidden: boolean | null
+          is_pinned: boolean | null
+          likes_count: number | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          comments_count?: number | null
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          is_hidden?: boolean | null
+          is_pinned?: boolean | null
+          likes_count?: number | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: never
+        }
+        Update: {
+          category_id?: string | null
+          comments_count?: number | null
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          is_hidden?: boolean | null
+          is_pinned?: boolean | null
+          likes_count?: number | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_posts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "forum_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       has_role: {
