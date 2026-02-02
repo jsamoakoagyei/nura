@@ -33,9 +33,9 @@ export function PostList({ categoryId }: PostListProps) {
   const { data: posts, isLoading } = useQuery({
     queryKey: ["forum-posts", categoryId],
     queryFn: async () => {
-      // Fetch posts
+      // Fetch posts using secure view that hides user_id for anonymous posts
       const { data: postsData, error: postsError } = await supabase
-        .from("forum_posts")
+        .from("forum_posts_secure")
         .select("*")
         .eq("category_id", categoryId)
         .eq("is_hidden", false)

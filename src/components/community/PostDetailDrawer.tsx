@@ -41,8 +41,9 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
     queryFn: async () => {
       if (!postId) return null;
       
+      // Use secure view that hides user_id for anonymous posts
       const { data: postData, error } = await supabase
-        .from("forum_posts")
+        .from("forum_posts_secure")
         .select("*")
         .eq("id", postId)
         .single();
@@ -70,8 +71,9 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
     queryFn: async () => {
       if (!postId) return [];
       
+      // Use secure view that hides user_id for anonymous comments
       const { data: commentsData, error } = await supabase
-        .from("forum_comments")
+        .from("forum_comments_secure")
         .select("*")
         .eq("post_id", postId)
         .eq("is_hidden", false)
