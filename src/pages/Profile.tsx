@@ -51,7 +51,10 @@ export default function Profile() {
           setAvatarUrl(data.avatar_url);
         }
       } catch (error: any) {
-        console.error("Error fetching profile:", error.message);
+        // Only log errors in development to avoid exposing internal details in production
+        if (import.meta.env.DEV) {
+          console.error("Error fetching profile:", error.message);
+        }
       } finally {
         setIsLoading(false);
       }
