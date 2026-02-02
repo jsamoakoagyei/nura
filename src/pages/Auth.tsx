@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/contexts/AuthContext";
 import { z } from "zod";
-import nuraIcon from "@/assets/nura-icon.png";
+import tlvLogo from "@/assets/tlv-logo.png";
 
 const emailSchema = z.string().email("Please enter a valid email address");
 const passwordSchema = z.string().min(6, "Password must be at least 6 characters");
@@ -183,8 +183,8 @@ export default function Auth() {
           {/* Logo */}
           <div className="text-center mb-8">
             <a href="/" className="inline-flex items-center gap-2 mb-4">
-              <img src={nuraIcon} alt="nura" className="w-12 h-12 rounded-2xl" />
-              <span className="font-serif font-semibold text-2xl text-foreground">nura</span>
+              <img src={tlvLogo} alt="The Little Voyage" className="w-12 h-12 rounded-2xl" />
+              <span className="font-serif font-semibold text-2xl text-foreground">The Little Voyage</span>
             </a>
             <h1 className="font-serif text-3xl font-semibold text-foreground mb-2">
               {isLogin ? "Welcome back" : "Join our community"}

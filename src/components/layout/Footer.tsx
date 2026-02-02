@@ -1,5 +1,5 @@
 import { Heart } from "lucide-react";
-import nuraIcon from "@/assets/nura-icon.png";
+import tlvLogo from "@/assets/tlv-logo.png";
 
 const footerLinks = {
   product: [
@@ -34,11 +34,11 @@ export function Footer() {
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <img src={nuraIcon} alt="nura" className="w-10 h-10 rounded-2xl" />
-              <span className="font-serif font-semibold text-xl text-foreground">nura</span>
+              <img src={tlvLogo} alt="The Little Voyage" className="w-10 h-10 rounded-2xl" />
+              <span className="font-serif font-semibold text-xl text-foreground">The Little Voyage</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              The trusted platform for confident parenting decisions.
+              Navigating early parenthood, together.
             </p>
           </div>
 
@@ -102,7 +102,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} nura. All rights reserved.
+            © {new Date().getFullYear()} The Little Voyage. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground flex items-center gap-1">
             Made with <Heart className="w-4 h-4 text-rose-400 fill-rose-400" /> for parents everywhere

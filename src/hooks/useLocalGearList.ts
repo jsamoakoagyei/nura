@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 
-const STORAGE_KEY = "nura-gear-list";
+const STORAGE_KEY = "tlv-gear-list";
 
 export interface SavedProduct {
   productId: string;

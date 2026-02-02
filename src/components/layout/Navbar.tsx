@@ -4,7 +4,7 @@ import { Menu, X, Search, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SettingsPopover } from "@/components/studio/SettingsPopover";
 import { UserMenu } from "@/components/layout/UserMenu";
-import nuraIcon from "@/assets/nura-icon.png";
+import tlvLogo from "@/assets/tlv-logo.png";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -26,8 +26,8 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <a href="/" className="flex items-center gap-2">
-            <img src={nuraIcon} alt="nura" className="w-10 h-10 rounded-2xl" />
-            <span className="font-serif font-semibold text-xl text-foreground">nura</span>
+            <img src={tlvLogo} alt="The Little Voyage" className="w-10 h-10 rounded-2xl" />
+            <span className="font-serif font-semibold text-xl text-foreground">The Little Voyage</span>
           </a>
 
           {/* Desktop Navigation */}
