@@ -8,6 +8,7 @@ import tlvLogo from "@/assets/tlv-logo.png";
 
 const navItems = [
   { name: "Home", href: "/" },
+  { name: "About", href: "/about" },
   { name: "The Studio", href: "/studio" },
   { name: "Community", href: "/community" },
 ];
