@@ -1,89 +1,86 @@
 
-# Replace Bubbles with Watercolor Clouds
+# Create About Page with Founder's Note
 
 ## Overview
-Replace the animated bubble decorations with soft, faint watercolor-style clouds that create a dreamy, nurturing aesthetic. The clouds will be static or gently animated to provide a calming visual without the rising bubble motion.
+Create a new About page that features the "Note from the Founder" content in a warm, personal, and visually elegant layout that aligns with The Little Voyage brand aesthetic.
 
-## Sections to Update
+## Page Design
 
-### 1. Hero Section (`src/components/sections/Hero.tsx`)
-- Remove the `Bubble` component (lines 7-27)
-- Remove the floating bubbles container (lines 42-54)
-- Add new `WatercolorCloud` component with:
-  - SVG-based cloud shapes with soft, organic edges
-  - Watercolor effect using gradients and blur filters
-  - Subtle opacity and gentle floating animation
-  - Multiple clouds positioned at various locations
+The About page will feature:
+- A hero section with a soft, welcoming header
+- The founder's note displayed in an elegant, letter-style format
+- Decorative watercolor clouds for brand consistency
+- Responsive design for mobile and desktop
 
-### 2. CTA Section (`src/components/sections/CTA.tsx`)
-- Remove the `CTABubble` component (lines 6-24)
-- Remove the decorative bubbles container (lines 33-41)
-- Add watercolor clouds with white/light styling to match the blue gradient background
+## Files to Create/Modify
 
-### 3. Create Reusable Cloud Component
-Create a new shared component `src/components/decorations/WatercolorCloud.tsx`:
-- Accept props for position, size, color variant, and animation delay
-- Use SVG paths for organic cloud shapes
-- Apply CSS filters for watercolor effect (blur, opacity gradients)
-- Support both light mode (azure tones) and dark/CTA variant (white tones)
+### 1. Create New Page: `src/pages/About.tsx`
+- Include Navbar and Footer for consistent layout
+- Hero section with "About The Little Voyage" heading
+- Founder's note section styled as a personal letter:
+  - Serif typography for warmth
+  - Centered, readable width (max-w-2xl)
+  - Subtle card background with soft border
+  - Signature line at the end
+- Watercolor cloud decorations for brand consistency
 
-## Visual Design
+### 2. Update Routing: `src/App.tsx`
+- Add route for `/about` pointing to the new About page
 
-**Cloud Appearance:**
-- Soft, irregular edges (not perfectly round)
-- Gradient fills from azure-200 to transparent
-- Multiple blur layers for watercolor "bleeding" effect
-- Very low opacity (0.15-0.35) for subtlety
+### 3. Update Navigation: `src/components/layout/Navbar.tsx`
+- Add "About" link to the navigation items
 
-**Animation:**
-- Gentle horizontal drift (3-5px movement)
-- Slow, organic motion (15-25 second duration)
-- No vertical rising motion
+### 4. Update Footer: `src/components/layout/Footer.tsx`
+- Update "About Us" link to point to `/about` instead of `#`
 
-## Cloud Positions
+## Visual Layout
 
-**Hero Section:**
-- Top-left corner: Large cloud, low opacity
-- Top-right area: Medium cloud
-- Middle-left: Small wispy cloud
-- Bottom-right: Medium-large cloud
-
-**CTA Section:**
-- Similar positioning with white-tinted clouds
-- Slightly higher opacity to show against blue gradient
-
----
-
-## Technical Details
-
-### WatercolorCloud Component Structure
 ```text
 +------------------------------------------+
-|  WatercolorCloud Component               |
-|  Props:                                  |
-|  - className: positioning                |
-|  - variant: 'light' | 'white'            |
-|  - size: 'sm' | 'md' | 'lg' | 'xl'       |
-|  - delay: animation delay                |
+|              Navbar                      |
 +------------------------------------------+
-|  SVG with:                               |
-|  - Organic cloud path                    |
-|  - Gradient fill (radial)                |
-|  - Blur filter for watercolor effect     |
-|  - Framer Motion for gentle drift        |
+|                                          |
+|   [Watercolor clouds - decorative]       |
+|                                          |
+|     "About The Little Voyage"            |
+|     (subtitle text)                      |
+|                                          |
++------------------------------------------+
+|                                          |
+|   +----------------------------------+   |
+|   |                                  |   |
+|   |   "A Note from the Founder"      |   |
+|   |                                  |   |
+|   |   Parenthood begins long         |   |
+|   |   before the first sleepless...  |   |
+|   |                                  |   |
+|   |   [Full letter content]          |   |
+|   |                                  |   |
+|   |   Welcome to The Little Voyage.  |   |
+|   |   We're glad you're here.        |   |
+|   |                                  |   |
+|   |   —                              |   |
+|   |                                  |   |
+|   +----------------------------------+   |
+|                                          |
++------------------------------------------+
+|              Footer                      |
 +------------------------------------------+
 ```
 
-### CSS Approach
-- Use `filter: blur()` for soft edges
-- Radial gradients for color fading
-- `mix-blend-mode: multiply` or `soft-light` for watercolor blending
-- Very low opacity with transparency in gradients
+## Technical Details
 
-### Files to Modify
-1. Create: `src/components/decorations/WatercolorCloud.tsx`
-2. Update: `src/components/sections/Hero.tsx`
-3. Update: `src/components/sections/CTA.tsx`
+### Page Structure (`src/pages/About.tsx`)
+- Uses Framer Motion for fade-in animations (consistent with other pages)
+- Includes `WatercolorCloud` component for brand consistency
+- Typography: `font-serif` for headings and letter content
+- Letter card: rounded corners, subtle border, cream/card background
+- Responsive padding and spacing
 
-### Cleanup
-- Remove bubble-related keyframes from `tailwind.config.ts` if no longer needed
+### Animation Approach
+- Staggered fade-in for hero text and letter content
+- Gentle entrance animations matching existing page patterns
+
+### Navigation Updates
+- Navbar: Add "About" between "Home" and "The Studio"
+- Footer: Update company section "About Us" href to `/about`
