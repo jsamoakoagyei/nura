@@ -55,6 +55,7 @@ export function WatercolorCloud({
         },
       }}
       className={`absolute pointer-events-none ${className}`}
+      aria-hidden="true"
       style={{ width: dimensions.width, height: dimensions.height }}
     >
       <svg

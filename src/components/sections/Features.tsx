@@ -97,7 +97,7 @@ export function Features() {
               className="group relative bg-card rounded-3xl p-8 lg:p-10 border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
             >
               {/* Icon */}
-              <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl ${feature.color} mb-6`}>
+              <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl ${feature.color} mb-6`} aria-hidden="true">
                 <feature.icon className="w-7 h-7" />
               </div>
 

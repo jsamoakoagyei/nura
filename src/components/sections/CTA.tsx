@@ -30,7 +30,7 @@ export function CTA() {
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white/90 text-sm font-medium mb-8"
           >
-            <span className="w-2 h-2 rounded-full bg-white/60 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-white/60 animate-pulse" aria-hidden="true" />
             Join our growing community
           </motion.div>
 
@@ -51,7 +51,7 @@ export function CTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto mb-10"
+            className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto mb-10"
           >
             Join thousands of parents who've found calm in the chaos. Start free today and experience the difference trusted guidance makes.
           </motion.p>
