@@ -1,86 +1,68 @@
 
-# Create About Page with Founder's Note
 
-## Overview
-Create a new About page that features the "Note from the Founder" content in a warm, personal, and visually elegant layout that aligns with The Little Voyage brand aesthetic.
+# Add Robust Input Validation and Sanitization
 
-## Page Design
+## Current State
 
-The About page will feature:
-- A hero section with a soft, welcoming header
-- The founder's note displayed in an elegant, letter-style format
-- Decorative watercolor clouds for brand consistency
-- Responsive design for mobile and desktop
+There are four user input points that write to the database:
 
-## Files to Create/Modify
+1. **CreatePostDialog** — title (maxLength=200 on input) and content (no maxLength), no Zod validation
+2. **PostDetailDrawer** — comment content (no maxLength, no validation beyond empty check)
+3. **Profile page** — display name (maxLength=50 on input), avatar upload (has file type/size checks)
+4. **Auth page** — email and password (already uses Zod validation)
 
-### 1. Create New Page: `src/pages/About.tsx`
-- Include Navbar and Footer for consistent layout
-- Hero section with "About The Little Voyage" heading
-- Founder's note section styled as a personal letter:
-  - Serif typography for warmth
-  - Centered, readable width (max-w-2xl)
-  - Subtle card background with soft border
-  - Signature line at the end
-- Watercolor cloud decorations for brand consistency
+The database has CHECK constraints for title (200), post content (10,000), comments (5,000), and display names (50), but client-side validation is inconsistent and there is no sanitization.
 
-### 2. Update Routing: `src/App.tsx`
-- Add route for `/about` pointing to the new About page
+## Plan
 
-### 3. Update Navigation: `src/components/layout/Navbar.tsx`
-- Add "About" link to the navigation items
+### 1. Create shared validation schemas (`src/lib/validation.ts`)
 
-### 4. Update Footer: `src/components/layout/Footer.tsx`
-- Update "About Us" link to point to `/about` instead of `#`
+Define Zod schemas and a sanitization helper in one place:
 
-## Visual Layout
+- `sanitizeText(input)` — trims whitespace, collapses excessive newlines, strips null bytes and control characters
+- `postTitleSchema` — string, trimmed, 1–200 chars
+- `postContentSchema` — string, trimmed, 1–10,000 chars
+- `commentContentSchema` — string, trimmed, 1–5,000 chars
+- `displayNameSchema` — string, trimmed, 1–50 chars (optional/nullable)
+- `categoryIdSchema` — UUID format validation
 
-```text
-+------------------------------------------+
-|              Navbar                      |
-+------------------------------------------+
-|                                          |
-|   [Watercolor clouds - decorative]       |
-|                                          |
-|     "About The Little Voyage"            |
-|     (subtitle text)                      |
-|                                          |
-+------------------------------------------+
-|                                          |
-|   +----------------------------------+   |
-|   |                                  |   |
-|   |   "A Note from the Founder"      |   |
-|   |                                  |   |
-|   |   Parenthood begins long         |   |
-|   |   before the first sleepless...  |   |
-|   |                                  |   |
-|   |   [Full letter content]          |   |
-|   |                                  |   |
-|   |   Welcome to The Little Voyage.  |   |
-|   |   We're glad you're here.        |   |
-|   |                                  |   |
-|   |   —                              |   |
-|   |                                  |   |
-|   +----------------------------------+   |
-|                                          |
-+------------------------------------------+
-|              Footer                      |
-+------------------------------------------+
-```
+### 2. Update CreatePostDialog
+
+- Import schemas, validate title + content with Zod before mutation
+- Show per-field error messages with character counts
+- Add `maxLength={10000}` to the Textarea
+- Sanitize inputs before insert
+
+### 3. Update PostDetailDrawer
+
+- Validate comment content with `commentContentSchema` before insert
+- Add `maxLength={5000}` to the comment Textarea
+- Show character count and validation error
+- Sanitize before insert
+
+### 4. Update Profile page
+
+- Validate display name with `displayNameSchema` before upsert
+- Show validation error inline
+- Sanitize before save
+- Restrict avatar file extensions to known safe types (jpg, png, gif, webp)
+
+### 5. Render safety
+
+- Audit all places where user-generated text is rendered — React's JSX already escapes by default, so no `dangerouslySetInnerHTML` concerns. Confirm no raw HTML rendering exists.
 
 ## Technical Details
 
-### Page Structure (`src/pages/About.tsx`)
-- Uses Framer Motion for fade-in animations (consistent with other pages)
-- Includes `WatercolorCloud` component for brand consistency
-- Typography: `font-serif` for headings and letter content
-- Letter card: rounded corners, subtle border, cream/card background
-- Responsive padding and spacing
+The `sanitizeText` utility will:
+```typescript
+function sanitizeText(input: string): string {
+  return input
+    .replace(/\0/g, '')           // strip null bytes
+    .replace(/[\x01-\x08\x0B\x0C\x0E-\x1F]/g, '') // strip control chars (keep \n, \r, \t)
+    .replace(/\n{4,}/g, '\n\n\n') // collapse excessive newlines
+    .trim();
+}
+```
 
-### Animation Approach
-- Staggered fade-in for hero text and letter content
-- Gentle entrance animations matching existing page patterns
+All Zod schemas will use `.transform(sanitizeText)` to ensure sanitization happens as part of validation. Character count indicators will be added to content fields so users know their limits.
 
-### Navigation Updates
-- Navbar: Add "About" between "Home" and "The Studio"
-- Footer: Update company section "About Us" href to `/about`
