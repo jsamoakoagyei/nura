@@ -55,7 +55,7 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
       let profile = null;
       if (!postData.is_anonymous) {
         const { data: profileData } = await supabase
-          .from("profiles")
+          .from("profiles_public")
           .select("display_name")
           .eq("user_id", postData.user_id)
           .single();
@@ -91,7 +91,7 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
       
       if (userIds.length > 0) {
         const { data: profilesData } = await supabase
-          .from("profiles")
+          .from("profiles_public")
           .select("user_id, display_name")
           .in("user_id", userIds);
 
