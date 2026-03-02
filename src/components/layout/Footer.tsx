@@ -1,8 +1,9 @@
+import { memo } from "react";
 import { Heart } from "lucide-react";
 import { FOOTER_LINKS, APP_NAME } from "@/lib/constants";
 import tlvLogo from "@/assets/tlv-logo.png";
 
-export function Footer() {
+export const Footer = memo(function Footer() {
   return (
     <footer className="bg-azure-50 border-t border-border">
       <div className="container mx-auto px-4 py-16">
@@ -49,4 +50,4 @@ export function Footer() {
       </div>
     </footer>
   );
-}
+});
