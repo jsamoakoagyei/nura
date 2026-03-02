@@ -12,6 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
 import { feedbackUnsave, feedbackTap } from "@/lib/feedback";
 
 interface MyGearDrawerProps {
@@ -63,17 +65,12 @@ export function MyGearDrawer({
 
           {/* Content */}
           {savedProducts.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center py-12 px-6 text-center">
-              <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mb-4">
-                <Heart className="w-8 h-8 text-muted-foreground" />
-              </div>
-              <h3 className="text-lg font-medium text-foreground mb-2">
-                No items saved yet
-              </h3>
-              <p className="text-sm text-muted-foreground max-w-xs">
-                Tap the heart icon on any product to save it to your gear list
-                for comparison.
-              </p>
+            <div className="flex-1 flex items-center justify-center py-12 px-6">
+              <EmptyState
+                icon={Heart}
+                title="No items saved yet"
+                message="Tap the heart icon on any product to save it to your gear list for comparison."
+              />
             </div>
           ) : (
             <ScrollArea className="flex-1 px-4 py-4">
@@ -155,11 +152,7 @@ function GearCard({
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
-      transition={{
-        type: "spring",
-        stiffness: 300,
-        damping: 25,
-      }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
       className="relative group"
     >
       <button
@@ -175,11 +168,7 @@ function GearCard({
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-blush-100 via-azure-100 to-cream-100 flex items-center justify-center">
-              <span className="text-2xl">
-                {product.category === "stroller" ? "🚀" : "🚗"}
-              </span>
-            </div>
+            <ProductImagePlaceholder category={product.category} />
           )}
           
           {/* Verdict badge */}

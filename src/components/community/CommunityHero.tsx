@@ -1,13 +1,12 @@
 import { motion } from "framer-motion";
 import { Users, MessageCircle, Heart } from "lucide-react";
+import { STATS } from "@/lib/constants";
 
 export function CommunityHero() {
   return (
     <section className="relative py-16 lg:py-24 overflow-hidden">
-      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-azure-50 to-background" />
       
-      {/* Floating decorations */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.5 }}
@@ -29,7 +28,7 @@ export function CommunityHero() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-azure-100 text-azure-600 text-sm font-medium mb-6"
           >
             <Users className="w-4 h-4" />
-            Join 10,000+ parents
+            {STATS.COMMUNITY_MEMBERS_LABEL}
           </motion.span>
 
           <motion.h1
@@ -65,7 +64,7 @@ export function CommunityHero() {
                   <Users className="w-6 h-6 text-azure-600" />
                 </div>
                 <div className="text-left">
-                  <p className="font-serif text-2xl font-semibold text-foreground">10k+</p>
+                  <p className="font-serif text-2xl font-semibold text-foreground">{STATS.COMMUNITY_MEMBERS}</p>
                   <p className="text-sm text-muted-foreground">Members</p>
                 </div>
               </li>
@@ -75,7 +74,7 @@ export function CommunityHero() {
                   <MessageCircle className="w-6 h-6 text-blush-300" />
                 </div>
                 <div className="text-left">
-                  <p className="font-serif text-2xl font-semibold text-foreground">50k+</p>
+                  <p className="font-serif text-2xl font-semibold text-foreground">{STATS.DISCUSSIONS}</p>
                   <p className="text-sm text-muted-foreground">Discussions</p>
                 </div>
               </li>
@@ -85,7 +84,7 @@ export function CommunityHero() {
                   <Heart className="w-6 h-6 text-rose-400" />
                 </div>
                 <div className="text-left">
-                  <p className="font-serif text-2xl font-semibold text-foreground">98%</p>
+                  <p className="font-serif text-2xl font-semibold text-foreground">{STATS.FEEL_SUPPORTED}</p>
                   <p className="text-sm text-muted-foreground">Feel supported</p>
                 </div>
               </li>

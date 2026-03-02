@@ -8,13 +8,12 @@ import {
   Moon,
   Sun,
   Footprints,
-  AlertCircle,
-  RefreshCw,
   MessageCircle,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 interface Category {
   id: string;
@@ -64,9 +63,7 @@ export function CategoryGrid({ selectedCategoryId, onSelectCategory }: CategoryG
     },
   });
 
-  if (selectedCategoryId) {
-    return null;
-  }
+  if (selectedCategoryId) return null;
 
   if (isLoading) {
     return (
@@ -79,46 +76,16 @@ export function CategoryGrid({ selectedCategoryId, onSelectCategory }: CategoryG
   }
 
   if (isError) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-center py-16"
-      >
-        <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
-          <AlertCircle className="w-8 h-8 text-destructive" />
-        </div>
-        <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
-          Couldn't load categories
-        </h3>
-        <p className="text-muted-foreground mb-6">
-          Something went wrong. Please try again.
-        </p>
-        <Button onClick={() => refetch()} variant="outline" className="gap-2">
-          <RefreshCw className="w-4 h-4" />
-          Retry
-        </Button>
-      </motion.div>
-    );
+    return <ErrorState title="Couldn't load categories" onRetry={() => refetch()} />;
   }
 
   if (!categories?.length) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-center py-16"
-      >
-        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-          <MessageCircle className="w-8 h-8 text-muted-foreground" />
-        </div>
-        <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
-          No categories yet
-        </h3>
-        <p className="text-muted-foreground">
-          Community topics are coming soon — check back later!
-        </p>
-      </motion.div>
+      <EmptyState
+        icon={MessageCircle}
+        title="No categories yet"
+        message="Community topics are coming soon — check back later!"
+      />
     );
   }
 

@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Plus, AlertCircle, RefreshCw } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { PostList } from "./PostList";
 import { CreatePostDialog } from "./CreatePostDialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { ROUTES } from "@/lib/constants";
 
 interface ForumSectionProps {
   categoryId: string | null;
@@ -34,9 +36,7 @@ export function ForumSection({ categoryId, onBack }: ForumSectionProps) {
     enabled: !!categoryId,
   });
 
-  if (!categoryId) {
-    return null;
-  }
+  if (!categoryId) return null;
 
   return (
     <AnimatePresence mode="wait">
@@ -77,7 +77,7 @@ export function ForumSection({ categoryId, onBack }: ForumSectionProps) {
           <Button
             onClick={() => {
               if (!user) {
-                window.location.href = "/auth";
+                window.location.href = ROUTES.AUTH;
               } else {
                 setIsCreateOpen(true);
               }
@@ -91,30 +91,11 @@ export function ForumSection({ categoryId, onBack }: ForumSectionProps) {
 
         {/* Error state */}
         {isError && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-16"
-          >
-            <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
-              <AlertCircle className="w-8 h-8 text-destructive" />
-            </div>
-            <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
-              Couldn't load this category
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              Something went wrong. Please try again.
-            </p>
-            <div className="flex items-center justify-center gap-3">
-              <Button onClick={onBack} variant="outline">
-                Go Back
-              </Button>
-              <Button onClick={() => refetch()} className="gap-2">
-                <RefreshCw className="w-4 h-4" />
-                Retry
-              </Button>
-            </div>
-          </motion.div>
+          <ErrorState
+            title="Couldn't load this category"
+            onBack={onBack}
+            onRetry={() => refetch()}
+          />
         )}
 
         {/* Posts */}

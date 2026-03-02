@@ -4,14 +4,8 @@ import { Menu, X, Search, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SettingsPopover } from "@/components/studio/SettingsPopover";
 import { UserMenu } from "@/components/layout/UserMenu";
+import { NAV_ITEMS, APP_NAME } from "@/lib/constants";
 import tlvLogo from "@/assets/tlv-logo.png";
-
-const navItems = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "The Studio", href: "/studio" },
-  { name: "Community", href: "/community" },
-];
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,15 +26,13 @@ export function Navbar() {
       >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* Logo */}
           <a href="/" className="flex items-center gap-2">
-            <img src={tlvLogo} alt="The Little Voyage" className="w-10 h-10 rounded-2xl" />
-            <span className="font-serif font-semibold text-xl text-foreground">The Little Voyage</span>
+            <img src={tlvLogo} alt={APP_NAME} className="w-10 h-10 rounded-2xl" />
+            <span className="font-serif font-semibold text-xl text-foreground">{APP_NAME}</span>
           </a>
 
-          {/* Desktop Navigation */}
           <ul className="hidden lg:flex items-center gap-8" role="list">
-            {navItems.map((item) => (
+            {NAV_ITEMS.map((item) => (
               <li key={item.name}>
                 <a
                   href={item.href}
@@ -52,7 +44,6 @@ export function Navbar() {
             ))}
           </ul>
 
-          {/* Desktop Actions */}
           <div className="hidden lg:flex items-center gap-3">
             <Button variant="ghost" size="icon" className="rounded-xl" aria-label="Search">
               <Search className="w-5 h-5" />
@@ -64,7 +55,6 @@ export function Navbar() {
             <UserMenu />
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             className="lg:hidden p-2"
             onClick={() => setIsOpen(!isOpen)}
@@ -76,7 +66,6 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
@@ -85,7 +74,7 @@ export function Navbar() {
           className="lg:hidden bg-background border-t border-border"
         >
           <div className="container mx-auto px-4 py-6 space-y-4">
-            {navItems.map((item) => (
+            {NAV_ITEMS.map((item) => (
               <a
                 key={item.name}
                 href={item.href}

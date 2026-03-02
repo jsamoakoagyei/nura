@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SaveButton } from "./SaveButton";
+import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
 import {
   Accordion,
   AccordionContent,
@@ -38,22 +39,16 @@ export function ProductDetailDrawer({
   if (!product) return null;
 
   const verdictStyle = VERDICT_STYLES[product.verdict];
-  
-  // Choose icon based on category
   const specIcons = product.category === "stroller" 
     ? [Scale, Ruler, Baby] 
     : [Scale, Shield, Car];
-  
   const specEntries = Object.entries(product.specs);
-  
-  // Placeholder gradient for products without images
   const hasImage = product.image && product.image.length > 0;
 
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
       <DrawerContent className="max-h-[90vh] focus:outline-none">
         <div className="overflow-y-auto pb-safe">
-          {/* Close button */}
           <DrawerClose asChild>
             <Button
               variant="ghost"
@@ -73,20 +68,13 @@ export function ProductDetailDrawer({
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-blush-100 via-azure-100 to-cream-100 flex items-center justify-center">
-                <div className="w-20 h-20 rounded-full bg-white/50 backdrop-blur-sm flex items-center justify-center">
-                  <span className="text-3xl">
-                    {product.category === "stroller" ? "🚀" : "🚗"}
-                  </span>
-                </div>
-              </div>
+              <ProductImagePlaceholder category={product.category} />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
           </div>
 
           {/* Content */}
           <div className="px-6 py-5">
-            {/* Header */}
             <DrawerHeader className="p-0 mb-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -102,11 +90,7 @@ export function ProductDetailDrawer({
                     {product.name}
                   </DrawerTitle>
                 </div>
-                <SaveButton
-                  isSaved={isSaved}
-                  onToggle={onToggleSave}
-                  size="lg"
-                />
+                <SaveButton isSaved={isSaved} onToggle={onToggleSave} size="lg" />
               </div>
             </DrawerHeader>
 
@@ -188,14 +172,10 @@ export function ProductDetailDrawer({
               </div>
             </div>
 
-            {/* Save Button (Full width) */}
+            {/* Save Button */}
             <Button
               onClick={() => {
-                if (isSaved) {
-                  feedbackUnsave();
-                } else {
-                  feedbackSave();
-                }
+                if (isSaved) { feedbackUnsave(); } else { feedbackSave(); }
                 onToggleSave();
               }}
               variant={isSaved ? "outline" : "default"}
@@ -208,11 +188,7 @@ export function ProductDetailDrawer({
                 </>
               ) : (
                 <>
-                  <motion.span
-                    initial={false}
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 0.3 }}
-                  >
+                  <motion.span initial={false} animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 0.3 }}>
                     ♡
                   </motion.span>
                   <span className="ml-2">Save to My Gear</span>
