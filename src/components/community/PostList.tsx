@@ -53,7 +53,7 @@ export function PostList({ categoryId }: PostListProps) {
       
       if (userIds.length > 0) {
         const { data: profilesData } = await supabase
-          .from("profiles")
+          .from("profiles_public")
           .select("user_id, display_name")
           .in("user_id", userIds);
 

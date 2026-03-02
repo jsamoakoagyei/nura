@@ -24,12 +24,7 @@ export default function Profile() {
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
 
-  // Redirect if not logged in
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/auth");
-    }
-  }, [user, authLoading, navigate]);
+  // Auth redirect is now handled by ProtectedRoute wrapper
 
   // Fetch profile data
   useEffect(() => {
