@@ -1,73 +1,87 @@
-# Welcome to your Lovable project
+# The Little Voyage
 
-## Project info
+A baby gear discovery and community platform for parents. Browse curated strollers and car seats, save favorites to your gear list, compare products side-by-side, and connect with other parents in the community forum.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Tech Stack
 
-## How can I edit this code?
+- **Frontend:** React 18, TypeScript, Vite
+- **Styling:** Tailwind CSS, shadcn/ui
+- **Animation:** Framer Motion
+- **Backend:** Lovable Cloud (authentication, database, file storage)
+- **Routing:** React Router v6
+- **State:** React Query (server), React Context (auth), localStorage (gear list)
+- **Validation:** Zod
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Getting Started
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Navigate to the project
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the dev server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at `http://localhost:5173`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Available Scripts
 
-**Use GitHub Codespaces**
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start development server with HMR |
+| `npm run build` | Production build |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run Vitest tests |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Project Structure
 
-## What technologies are used for this project?
+```
+src/
+├── assets/              # Images (product photos, logos, hero background)
+├── components/
+│   ├── auth/            # Authentication guards (ProtectedRoute)
+│   ├── community/       # Forum UI (posts, comments, categories)
+│   ├── decorations/     # Visual embellishments (WatercolorCloud)
+│   ├── layout/          # App shell (Navbar, Footer, UserMenu)
+│   ├── sections/        # Landing page sections (Hero, Features, CTA)
+│   ├── studio/          # Gear studio (product cards, carousels, drawers)
+│   └── ui/              # shadcn/ui primitives (Button, Dialog, etc.)
+├── contexts/            # React Context providers (AuthContext)
+├── data/                # Static product catalogs (strollers, car seats)
+├── hooks/               # Custom hooks (useAuthForm, useProfile, useLocalGearList)
+├── integrations/        # Third-party clients (Supabase, Lovable)
+├── lib/                 # Utilities (validation, feedback sounds, constants)
+├── pages/               # Route-level components (Index, Studio, Community, Auth, Profile)
+└── test/                # Test setup and example tests
+```
 
-This project is built with:
+## Architecture
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Logic / UI Separation
 
-## How can I deploy this project?
+Business logic lives in custom hooks (`hooks/`) and utility modules (`lib/`). Page components in `pages/` compose hooks and presentational components from `components/` — they contain minimal logic themselves.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+### Constants Centralization
 
-## Can I connect a custom domain to my Lovable project?
+Route paths, app metadata, and other magic strings are defined in `src/lib/constants.ts` and imported everywhere. No hardcoded route strings in components.
 
-Yes, you can!
+### Validation
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+All user input is validated with Zod schemas defined in `src/lib/validation.ts`. The schemas use a `.transform().pipe()` pattern to sanitize input (strip control characters, collapse whitespace) before validating the cleaned result.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+### Error Handling
+
+`src/lib/safeAsync.ts` provides a Go-style `[data, error]` tuple wrapper for async operations, keeping error handling flat and explicit.
+
+## Key Conventions
+
+- **File naming:** PascalCase for components (`ProductCard.tsx`), camelCase for hooks and utilities (`useProfile.ts`, `feedback.ts`)
+- **Component organization:** Grouped by feature domain (`studio/`, `community/`, `layout/`), not by type
+- **Exports:** Named exports for components; default exports only for page-level components (required by React.lazy)
+- **Styling:** Tailwind semantic tokens from the design system — no hardcoded color values in components

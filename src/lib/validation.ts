@@ -7,13 +7,19 @@ import { z } from "zod";
 export function sanitizeText(input: string): string {
   return input
     .replace(/\0/g, "")                              // strip null bytes
-    .replace(/[\x01-\x08\x0B\x0C\x0E-\x1F]/g, "")   // strip control chars (keep \n, \r, \t)
+    // Strip ASCII control characters EXCEPT \n (0x0A), \r (0x0D), and \t (0x09)
+    // — users need these for line breaks and indentation in forum posts.
+    .replace(/[\x01-\x08\x0B\x0C\x0E-\x1F]/g, "")
     .replace(/\n{4,}/g, "\n\n\n")                     // collapse excessive newlines
     .trim();
 }
 
 // --- Forum post schemas ---
 
+// The .transform().pipe() pattern below first runs sanitizeText, then validates
+// the sanitized result with the piped schema. This catches inputs that are only
+// whitespace (or only control characters) — they pass the initial min(1) check
+// but become empty strings after sanitization, which the piped min(1) catches.
 export const postTitleSchema = z
   .string()
   .min(1, "Title is required")

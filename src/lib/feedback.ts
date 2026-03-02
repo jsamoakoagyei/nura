@@ -27,7 +27,9 @@ export function triggerHaptic(pattern: HapticPattern = "medium") {
   }
 }
 
-// Audio context singleton
+// AudioContext is kept as a singleton because creating multiple contexts is
+// expensive and most browsers limit the number of active contexts. We reuse
+// one instance for the entire app session.
 let audioContext: AudioContext | null = null;
 
 function getAudioContext(): AudioContext | null {
@@ -41,7 +43,9 @@ function getAudioContext(): AudioContext | null {
     }
   }
   
-  // Resume if suspended (required by browser autoplay policies)
+  // Browser autoplay policies automatically suspend AudioContexts that were
+  // created before any user interaction. Calling resume() here is safe — if
+  // the context is already running, it's a no-op.
   if (audioContext.state === "suspended") {
     audioContext.resume();
   }
@@ -71,6 +75,9 @@ function playTone(options: ToneOptions) {
     frequency,
     duration,
     type = "sine",
+    // Volume is intentionally very low (0.1–0.15) because this is a baby-product
+    // app — parents may have a sleeping child nearby, so feedback sounds must be
+    // subtle enough not to startle.
     volume = 0.15,
     fadeOut = 0.1,
   } = options;
@@ -99,7 +106,8 @@ function playTone(options: ToneOptions) {
  * Sound effect presets for UI interactions
  */
 export const sounds = {
-  /** Upward chime for saving/adding */
+  /** Upward chime for saving/adding — plays C5→E5→G5 (a C-major triad),
+   *  creating a universally pleasant ascending "confirmation" sound. */
   save: () => {
     playTone({ frequency: 523.25, duration: 0.08, type: "sine", volume: 0.12 }); // C5
     setTimeout(() => {
@@ -110,7 +118,7 @@ export const sounds = {
     }, 120);
   },
 
-  /** Downward tone for removing/unsaving */
+  /** Downward tone for removing/unsaving — descending interval conveys "undo" */
   unsave: () => {
     playTone({ frequency: 440, duration: 0.12, type: "sine", volume: 0.1 }); // A4
     setTimeout(() => {
