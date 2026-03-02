@@ -57,7 +57,7 @@ export function ProductCard({ product, offset, isActive, onClick, onDetailOpen }
       whileHover={isActive ? { scale: 1.02 } : {}}
     >
       <div
-        className={`w-[280px] h-[340px] lg:w-[320px] lg:h-[380px] rounded-3xl overflow-hidden shadow-2xl ${
+        className={`w-[min(280px,80vw)] h-[340px] lg:w-[320px] lg:h-[380px] rounded-3xl overflow-hidden shadow-2xl ${
           isActive ? "ring-4 ring-primary/20" : ""
         }`}
       >
