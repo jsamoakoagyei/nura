@@ -12,7 +12,7 @@ export default function Community() {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <main className="pt-16 lg:pt-20">
+      <main id="main-content" className="pt-16 lg:pt-20">
         <CommunityHero />
         
         <section className="container mx-auto px-4 py-12 lg:py-16">

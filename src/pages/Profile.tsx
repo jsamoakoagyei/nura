@@ -200,7 +200,7 @@ export default function Profile() {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <main className="pt-24 lg:pt-28 pb-12">
+      <main id="main-content" className="pt-24 lg:pt-28 pb-12">
         <div className="container mx-auto px-4 max-w-lg">
           {/* Back button */}
           <Button
