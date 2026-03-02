@@ -59,35 +59,37 @@ export function CommunityHero() {
             transition={{ delay: 0.3 }}
             className="flex flex-wrap justify-center gap-8 lg:gap-12"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-azure-100 flex items-center justify-center">
-                <Users className="w-6 h-6 text-azure-600" />
-              </div>
-              <div className="text-left">
-                <p className="font-serif text-2xl font-semibold text-foreground">10k+</p>
-                <p className="text-sm text-muted-foreground">Members</p>
-              </div>
-            </div>
+            <ul className="flex flex-wrap justify-center gap-8 lg:gap-12" role="list">
+              <li className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-azure-100 flex items-center justify-center" aria-hidden="true">
+                  <Users className="w-6 h-6 text-azure-600" />
+                </div>
+                <div className="text-left">
+                  <p className="font-serif text-2xl font-semibold text-foreground">10k+</p>
+                  <p className="text-sm text-muted-foreground">Members</p>
+                </div>
+              </li>
 
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-blush-100 flex items-center justify-center">
-                <MessageCircle className="w-6 h-6 text-blush-300" />
-              </div>
-              <div className="text-left">
-                <p className="font-serif text-2xl font-semibold text-foreground">50k+</p>
-                <p className="text-sm text-muted-foreground">Discussions</p>
-              </div>
-            </div>
+              <li className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-blush-100 flex items-center justify-center" aria-hidden="true">
+                  <MessageCircle className="w-6 h-6 text-blush-300" />
+                </div>
+                <div className="text-left">
+                  <p className="font-serif text-2xl font-semibold text-foreground">50k+</p>
+                  <p className="text-sm text-muted-foreground">Discussions</p>
+                </div>
+              </li>
 
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-cream-100 flex items-center justify-center">
-                <Heart className="w-6 h-6 text-rose-400" />
-              </div>
-              <div className="text-left">
-                <p className="font-serif text-2xl font-semibold text-foreground">98%</p>
-                <p className="text-sm text-muted-foreground">Feel supported</p>
-              </div>
-            </div>
+              <li className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-cream-100 flex items-center justify-center" aria-hidden="true">
+                  <Heart className="w-6 h-6 text-rose-400" />
+                </div>
+                <div className="text-left">
+                  <p className="font-serif text-2xl font-semibold text-foreground">98%</p>
+                  <p className="text-sm text-muted-foreground">Feel supported</p>
+                </div>
+              </li>
+            </ul>
           </motion.div>
         </div>
       </div>

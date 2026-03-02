@@ -30,7 +30,7 @@ export function Footer() {
     <footer className="bg-azure-50 border-t border-border">
       <div className="container mx-auto px-4 py-16">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 mb-12">
+        <nav aria-label="Footer" className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 mb-12">
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
@@ -97,7 +97,7 @@ export function Footer() {
               ))}
             </ul>
           </div>
-        </div>
+        </nav>
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
