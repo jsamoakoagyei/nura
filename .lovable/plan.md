@@ -1,68 +1,64 @@
 
 
-# Add Robust Input Validation and Sanitization
+# Authentication Middleware and Authorization Checks
 
-## Current State
+## Current State Analysis
 
-There are four user input points that write to the database:
+After auditing the codebase, the backend (RLS policies) is well-configured. The gaps are on the client side:
 
-1. **CreatePostDialog** — title (maxLength=200 on input) and content (no maxLength), no Zod validation
-2. **PostDetailDrawer** — comment content (no maxLength, no validation beyond empty check)
-3. **Profile page** — display name (maxLength=50 on input), avatar upload (has file type/size checks)
-4. **Auth page** — email and password (already uses Zod validation)
+### Issues Found
 
-The database has CHECK constraints for title (200), post content (10,000), comments (5,000), and display names (50), but client-side validation is inconsistent and there is no sanitization.
+1. **No reusable auth guard** -- The Profile page uses an inline `useEffect` redirect, and the Community page has no auth guard at all (queries fail silently for unauthenticated users since RLS requires `auth.uid() IS NOT NULL`).
+
+2. **Incorrect table for fetching other users' profiles** -- `PostList` and `PostDetailDrawer` query the `profiles` table for other users' display names, but RLS on `profiles` only allows `auth.uid() = user_id`. This means other users' names silently fail to load. The `profiles_public` view exists exactly for this purpose but isn't being used.
+
+3. **Mutations are properly guarded** -- All write operations (`CreatePostDialog`, `PostDetailDrawer`, `Profile`) already check `if (!user) throw new Error("Not authenticated")`, and RLS enforces `user_id = auth.uid()` on all inserts/updates. No changes needed here.
 
 ## Plan
 
-### 1. Create shared validation schemas (`src/lib/validation.ts`)
+### 1. Create `ProtectedRoute` component (`src/components/auth/ProtectedRoute.tsx`)
+A wrapper that checks `useAuth()` and redirects to `/auth` if unauthenticated. Shows a loading spinner while auth state resolves.
 
-Define Zod schemas and a sanitization helper in one place:
+### 2. Apply `ProtectedRoute` in `App.tsx`
+Wrap the `/profile` and `/community` routes with `ProtectedRoute`. Remove the inline `useEffect` redirect from `Profile.tsx`.
 
-- `sanitizeText(input)` — trims whitespace, collapses excessive newlines, strips null bytes and control characters
-- `postTitleSchema` — string, trimmed, 1–200 chars
-- `postContentSchema` — string, trimmed, 1–10,000 chars
-- `commentContentSchema` — string, trimmed, 1–5,000 chars
-- `displayNameSchema` — string, trimmed, 1–50 chars (optional/nullable)
-- `categoryIdSchema` — UUID format validation
+### 3. Fix profile queries to use `profiles_public` view
+Update `PostList.tsx` and `PostDetailDrawer.tsx` to query `profiles_public` instead of `profiles` when fetching other users' display names. This fixes the silent failure where other users' names don't load.
 
-### 2. Update CreatePostDialog
-
-- Import schemas, validate title + content with Zod before mutation
-- Show per-field error messages with character counts
-- Add `maxLength={10000}` to the Textarea
-- Sanitize inputs before insert
-
-### 3. Update PostDetailDrawer
-
-- Validate comment content with `commentContentSchema` before insert
-- Add `maxLength={5000}` to the comment Textarea
-- Show character count and validation error
-- Sanitize before insert
-
-### 4. Update Profile page
-
-- Validate display name with `displayNameSchema` before upsert
-- Show validation error inline
-- Sanitize before save
-- Restrict avatar file extensions to known safe types (jpg, png, gif, webp)
-
-### 5. Render safety
-
-- Audit all places where user-generated text is rendered — React's JSX already escapes by default, so no `dangerouslySetInnerHTML` concerns. Confirm no raw HTML rendering exists.
+### 4. Add RLS policy on `profiles_public` view
+Add a SELECT policy so only authenticated users can read from `profiles_public` (matching the existing forum access pattern).
 
 ## Technical Details
 
-The `sanitizeText` utility will:
-```typescript
-function sanitizeText(input: string): string {
-  return input
-    .replace(/\0/g, '')           // strip null bytes
-    .replace(/[\x01-\x08\x0B\x0C\x0E-\x1F]/g, '') // strip control chars (keep \n, \r, \t)
-    .replace(/\n{4,}/g, '\n\n\n') // collapse excessive newlines
-    .trim();
-}
+### ProtectedRoute Component
+```tsx
+// Checks auth state, redirects to /auth if not logged in
+// Shows loading spinner while auth resolves
+// Renders children (via <Outlet />) when authenticated
 ```
 
-All Zod schemas will use `.transform(sanitizeText)` to ensure sanitization happens as part of validation. Character count indicators will be added to content fields so users know their limits.
+### Route Changes in App.tsx
+```tsx
+<Route element={<ProtectedRoute />}>
+  <Route path="/profile" element={<Profile />} />
+  <Route path="/community" element={<Community />} />
+</Route>
+```
+
+### Profile Query Fix
+In `PostList.tsx` and `PostDetailDrawer.tsx`, change:
+```typescript
+// Before: fails for other users due to RLS
+.from("profiles")
+// After: uses public view designed for community visibility  
+.from("profiles_public")
+```
+
+### Database Migration
+```sql
+ALTER TABLE profiles_public ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Authenticated users can view public profiles"
+  ON profiles_public FOR SELECT
+  USING (auth.uid() IS NOT NULL);
+```
 
