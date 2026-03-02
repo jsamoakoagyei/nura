@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Drawer } from "vaul";
-import { formatDistanceToNow } from "date-fns";
-import { Heart, MessageCircle, User, Clock, Send } from "lucide-react";
+import { Heart, MessageCircle, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -10,8 +9,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { PostAuthorMeta } from "./PostAuthorMeta";
 import { useToast } from "@/hooks/use-toast";
 import { commentContentSchema } from "@/lib/validation";
+import { ROUTES } from "@/lib/constants";
 
 interface PostDetailDrawerProps {
   postId: string | null;
@@ -42,7 +44,6 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
     queryFn: async () => {
       if (!postId) return null;
       
-      // Use secure view that hides user_id for anonymous posts
       const { data: postData, error } = await supabase
         .from("forum_posts_secure")
         .select("*")
@@ -51,7 +52,6 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
 
       if (error) throw error;
 
-      // Fetch profile if not anonymous
       let profile = null;
       if (!postData.is_anonymous) {
         const { data: profileData } = await supabase
@@ -72,7 +72,6 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
     queryFn: async () => {
       if (!postId) return [];
       
-      // Use secure view that hides user_id for anonymous comments
       const { data: commentsData, error } = await supabase
         .from("forum_comments_secure")
         .select("*")
@@ -82,7 +81,6 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
 
       if (error) throw error;
 
-      // Fetch profiles for non-anonymous comments
       const userIds = commentsData
         .filter((c) => !c.is_anonymous)
         .map((c) => c.user_id);
@@ -178,10 +176,7 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
       queryClient.invalidateQueries({ queryKey: ["forum-comments", postId] });
       queryClient.invalidateQueries({ queryKey: ["forum-post", postId] });
       queryClient.invalidateQueries({ queryKey: ["forum-posts"] });
-      toast({
-        title: "Comment added!",
-        description: "Your comment has been posted.",
-      });
+      toast({ title: "Comment added!", description: "Your comment has been posted." });
     },
     onError: (error: any) => {
       toast({
@@ -196,7 +191,7 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
     e.preventDefault();
     
     if (!user) {
-      window.location.href = "/auth";
+      window.location.href = ROUTES.AUTH;
       return;
     }
 
@@ -228,18 +223,13 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
               <>
                 {/* Post Header */}
                 <div className="mb-4">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                    <User className="w-4 h-4" />
-                    <span>
-                      {post.is_anonymous
-                        ? "Anonymous"
-                        : post.profiles?.display_name || "Member"}
-                    </span>
-                    <span>•</span>
-                    <Clock className="w-3 h-3" />
-                    <span>
-                      {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-                    </span>
+                  <div className="mb-2">
+                    <PostAuthorMeta
+                      isAnonymous={post.is_anonymous}
+                      displayName={post.profiles?.display_name}
+                      createdAt={post.created_at}
+                      iconSize="md"
+                    />
                   </div>
                   <h2 className="font-serif text-2xl font-semibold text-foreground mb-4">
                     {post.title}
@@ -254,7 +244,7 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
                     size="sm"
                     onClick={() => {
                       if (!user) {
-                        window.location.href = "/auth";
+                        window.location.href = ROUTES.AUTH;
                         return;
                       }
                       toggleLike.mutate();
@@ -283,37 +273,24 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
                   ) : comments?.length ? (
                     <div className="space-y-4">
                       {comments.map((comment) => (
-                        <div
-                          key={comment.id}
-                          className="bg-muted/50 rounded-xl p-4"
-                        >
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                            <User className="w-3 h-3" />
-                            <span>
-                              {comment.is_anonymous
-                                ? "Anonymous"
-                                : comment.profiles?.display_name || "Member"}
-                            </span>
-                            <span>•</span>
-                            <span>
-                              {formatDistanceToNow(new Date(comment.created_at), {
-                                addSuffix: true,
-                              })}
-                            </span>
+                        <div key={comment.id} className="bg-muted/50 rounded-xl p-4">
+                          <div className="mb-2">
+                            <PostAuthorMeta
+                              isAnonymous={comment.is_anonymous}
+                              displayName={comment.profiles?.display_name}
+                              createdAt={comment.created_at}
+                            />
                           </div>
                           <p className="text-foreground">{comment.content}</p>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-10">
-                      <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
-                        <MessageCircle className="w-6 h-6 text-muted-foreground" />
-                      </div>
-                      <p className="text-muted-foreground text-sm">
-                        No comments yet. Be the first to respond!
-                      </p>
-                    </div>
+                    <EmptyState
+                      icon={MessageCircle}
+                      title="No comments yet"
+                      message="Be the first to respond!"
+                    />
                   )}
                 </div>
 

@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
 
 interface CompareDrawerProps {
   isOpen: boolean;
@@ -28,12 +29,10 @@ export function CompareDrawer({
 }: CompareDrawerProps) {
   if (products.length === 0) return null;
 
-  // Get all unique spec keys from all products
   const allSpecKeys = Array.from(
     new Set(products.flatMap((p) => Object.keys(p.specs)))
   );
 
-  // Determine icon based on first product's category
   const category = products[0]?.category || "stroller";
   const specIcons: Record<string, typeof Scale> = {
     Weight: Scale,
@@ -47,7 +46,6 @@ export function CompareDrawer({
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
       <DrawerContent className="max-h-[95vh] h-[95vh] focus:outline-none">
         <div className="flex flex-col h-full">
-          {/* Header */}
           <DrawerHeader className="flex-shrink-0 border-b border-border/50 pb-4">
             <div className="flex items-center justify-between">
               <div>
@@ -66,7 +64,6 @@ export function CompareDrawer({
             </div>
           </DrawerHeader>
 
-          {/* Comparison content */}
           <ScrollArea className="flex-1">
             <div className="min-w-max">
               {/* Products header row */}
@@ -99,7 +96,6 @@ export function CompareDrawer({
                 })}
               </CompareRow>
 
-              {/* Best For row */}
               <CompareRow label="Best For" isHighlight>
                 {products.map((product) => (
                   <p key={product.id} className="text-xs text-foreground leading-relaxed">
@@ -108,7 +104,6 @@ export function CompareDrawer({
                 ))}
               </CompareRow>
 
-              {/* Not For row */}
               <CompareRow label="Not For">
                 {products.map((product) => (
                   <p key={product.id} className="text-xs text-muted-foreground leading-relaxed">
@@ -117,16 +112,10 @@ export function CompareDrawer({
                 ))}
               </CompareRow>
 
-              {/* Specs rows */}
               {allSpecKeys.map((specKey, index) => {
                 const Icon = specIcons[specKey] || Shield;
                 return (
-                  <CompareRow 
-                    key={specKey} 
-                    label={specKey} 
-                    icon={Icon}
-                    isHighlight={index % 2 === 0}
-                  >
+                  <CompareRow key={specKey} label={specKey} icon={Icon} isHighlight={index % 2 === 0}>
                     {products.map((product) => (
                       <p key={product.id} className="text-sm font-medium text-foreground text-center">
                         {product.specs[specKey] || "—"}
@@ -171,14 +160,7 @@ export function CompareDrawer({
   );
 }
 
-// Product header with image
-function ProductHeader({
-  product,
-  onClick,
-}: {
-  product: Product;
-  onClick: () => void;
-}) {
+function ProductHeader({ product, onClick }: { product: Product; onClick: () => void }) {
   const hasImage = product.image && product.image.length > 0;
 
   return (
@@ -186,7 +168,6 @@ function ProductHeader({
       onClick={onClick}
       className="p-3 border-l border-border/30 hover:bg-muted/30 transition-colors text-center"
     >
-      {/* Image */}
       <div className="relative w-full h-20 mb-2 rounded-lg overflow-hidden bg-muted/50">
         {hasImage ? (
           <img
@@ -195,15 +176,9 @@ function ProductHeader({
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-blush-100 via-azure-100 to-cream-100 flex items-center justify-center">
-            <span className="text-xl">
-              {product.category === "stroller" ? "🚀" : "🚗"}
-            </span>
-          </div>
+          <ProductImagePlaceholder category={product.category} />
         )}
       </div>
-
-      {/* Name */}
       <p className="text-[10px] font-medium text-primary uppercase tracking-wider">
         {product.brand}
       </p>
@@ -214,7 +189,6 @@ function ProductHeader({
   );
 }
 
-// Comparison row component
 function CompareRow({
   label,
   icon: Icon,
@@ -240,10 +214,7 @@ function CompareRow({
         </span>
       </div>
       {children.map((child, index) => (
-        <div 
-          key={index} 
-          className="p-3 border-l border-border/30 flex items-center justify-center"
-        >
+        <div key={index} className="p-3 border-l border-border/30 flex items-center justify-center">
           {child}
         </div>
       ))}

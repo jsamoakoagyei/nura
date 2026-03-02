@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Heart, Users } from "lucide-react";
 import { WatercolorCloud } from "@/components/decorations/WatercolorCloud";
+import { APP_NAME, STATS, ROUTES } from "@/lib/constants";
 import heroBg from "@/assets/hero-bg.jpg";
 
 export function Hero() {
@@ -10,11 +11,7 @@ export function Hero() {
     <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 z-0">
-        <img
-          src={heroBg}
-          alt=""
-          className="w-full h-full object-cover opacity-40"
-        />
+        <img src={heroBg} alt="" className="w-full h-full object-cover opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/30 to-background" />
       </div>
 
@@ -40,7 +37,7 @@ export function Hero() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-azure-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-azure-500"></span>
             </span>
-            Trusted by 50,000+ parents
+            Trusted by {STATS.PARENTS_TRUST} parents
           </motion.div>
 
           {/* Headline */}
@@ -65,7 +62,7 @@ export function Hero() {
             Thoughtfully tested essentials and trusted guidance for life with little ones.
           </motion.p>
 
-          {/* Support Text - Two Paragraphs */}
+          {/* Support Text */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -76,7 +73,7 @@ export function Hero() {
               Parenthood is a journey—one filled with questions, choices, and quiet moments of doubt.
             </p>
             <p>
-              The Little Voyage exists to gently guide you through it, with carefully researched reviews, honest recommendations, and a steady hand when you need it most.
+              {APP_NAME} exists to gently guide you through it, with carefully researched reviews, honest recommendations, and a steady hand when you need it most.
             </p>
           </motion.div>
 
@@ -88,7 +85,7 @@ export function Hero() {
             className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
           >
             <Button variant="hero" size="xl" asChild>
-              <Link to="/profile">
+              <Link to={ROUTES.PROFILE}>
                 Start Your Journey
                 <ArrowRight className="w-5 h-5 ml-1" />
               </Link>
@@ -127,7 +124,6 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Decorative Elements */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-10" />
     </section>
   );

@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { MessageCircle, Heart, Clock, User, AlertCircle, RefreshCw } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+import { MessageCircle, Heart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { PostAuthorMeta } from "./PostAuthorMeta";
 import { useState } from "react";
 import { PostDetailDrawer } from "./PostDetailDrawer";
 
@@ -82,46 +83,16 @@ export function PostList({ categoryId }: PostListProps) {
   }
 
   if (isError) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-center py-16"
-      >
-        <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
-          <AlertCircle className="w-8 h-8 text-destructive" />
-        </div>
-        <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
-          Couldn't load posts
-        </h3>
-        <p className="text-muted-foreground mb-6">
-          Something went wrong. Please try again.
-        </p>
-        <Button onClick={() => refetch()} variant="outline" className="gap-2">
-          <RefreshCw className="w-4 h-4" />
-          Retry
-        </Button>
-      </motion.div>
-    );
+    return <ErrorState title="Couldn't load posts" onRetry={() => refetch()} />;
   }
 
   if (!posts?.length) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-center py-16"
-      >
-        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-          <MessageCircle className="w-8 h-8 text-muted-foreground" />
-        </div>
-        <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
-          No posts yet
-        </h3>
-        <p className="text-muted-foreground">
-          Be the first to start a conversation!
-        </p>
-      </motion.div>
+      <EmptyState
+        icon={MessageCircle}
+        title="No posts yet"
+        message="Be the first to start a conversation!"
+      />
     );
   }
 
@@ -147,17 +118,11 @@ export function PostList({ categoryId }: PostListProps) {
                     Pinned
                   </Badge>
                 )}
-                <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <User className="w-3 h-3" />
-                  {post.is_anonymous
-                    ? "Anonymous"
-                    : post.profiles?.display_name || "Member"}
-                </span>
-                <span className="text-muted-foreground">•</span>
-                <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <Clock className="w-3 h-3" />
-                  {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-                </span>
+                <PostAuthorMeta
+                  isAnonymous={post.is_anonymous}
+                  displayName={post.profiles?.display_name}
+                  createdAt={post.created_at}
+                />
               </div>
             </div>
 
