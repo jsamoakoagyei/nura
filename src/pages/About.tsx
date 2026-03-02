@@ -8,7 +8,7 @@ export default function About() {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <main className="pt-16 lg:pt-20">
+      <main id="main-content" className="pt-16 lg:pt-20">
         {/* Hero Section */}
         <section className="relative py-16 lg:py-24 overflow-hidden">
           {/* Decorative clouds */}

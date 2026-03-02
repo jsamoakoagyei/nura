@@ -124,7 +124,7 @@ export default function Studio() {
       <Navbar />
 
       {/* Main content */}
-      <main className="pt-24 lg:pt-32 pb-16 lg:pb-24">
+      <main id="main-content" className="pt-24 lg:pt-32 pb-16 lg:pb-24">
         <div className="container mx-auto px-4">
           {/* Header */}
           <motion.div
