@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 
 interface PaginationDotsProps {
@@ -6,7 +7,7 @@ interface PaginationDotsProps {
   onDotClick: (index: number) => void;
 }
 
-export function PaginationDots({ total, activeIndex, onDotClick }: PaginationDotsProps) {
+export const PaginationDots = memo(function PaginationDots({ total, activeIndex, onDotClick }: PaginationDotsProps) {
   return (
     <div className="flex items-center justify-center gap-2 mt-6">
       {Array.from({ length: total }).map((_, index) => (
@@ -20,18 +21,14 @@ export function PaginationDots({ total, activeIndex, onDotClick }: PaginationDot
             className="w-2 h-2 rounded-full bg-muted-foreground/30"
             animate={{
               scale: activeIndex === index ? 1.3 : 1,
-              backgroundColor: activeIndex === index 
-                ? "hsl(202, 100%, 50%)" 
+              backgroundColor: activeIndex === index
+                ? "hsl(202, 100%, 50%)"
                 : "hsl(202, 15%, 45%, 0.3)"
             }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 25
-            }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
           />
         </button>
       ))}
     </div>
   );
-}
+});

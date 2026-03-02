@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { motion } from "framer-motion";
 import { Menu, X, Search, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,7 @@ import { UserMenu } from "@/components/layout/UserMenu";
 import { NAV_ITEMS, APP_NAME } from "@/lib/constants";
 import tlvLogo from "@/assets/tlv-logo.png";
 
-export function Navbar() {
+export const Navbar = memo(function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -96,4 +96,4 @@ export function Navbar() {
       </motion.nav>
     </>
   );
-}
+});
