@@ -1,104 +1,56 @@
 
 
-# Performance Optimization Plan
+# Documentation, Structure, and Cleanup Plan
 
-## 1. Code-Splitting & Lazy Loading (Bundle Size)
+## 1. Add business-logic comments to key files
 
-Every page is eagerly imported in `App.tsx`, meaning the entire app downloads on first load. Pages like Studio, Community, Auth, Profile, and About are never needed on the landing page.
+Add "why" comments (not "what") to the files with non-obvious logic:
 
-**Changes to `App.tsx`:**
-- Replace static imports with `React.lazy()` for all pages except `Index`
-- Wrap routes in `<Suspense>` with a lightweight spinner fallback
-- This defers ~60% of page-level code (Studio alone pulls in all product data, carousels, drawers, etc.)
+- **`AuthContext.tsx`**: Explain why `onAuthStateChange` is set up before `getSession` (prevents race condition where session is established before listener catches it). Explain why `createProfileIfNeeded` is deferred with `setTimeout(fn, 0)` (avoids Supabase auth callback deadlock).
+- **`useAuthForm.ts`**: Explain why known error messages are string-matched (Supabase returns generic errors; we map them to user-friendly messages). Explain why `emailRedirectTo` is set on signup (required for email confirmation flow to return users to the app).
+- **`useProfile.ts`**: Explain the `PGRST116` error code check (means "no rows found" — expected for new users who haven't set up a profile yet). Explain the cache-busting `?t=${Date.now()}` on avatar URLs (CDN caching would otherwise show stale avatars). Explain why `upsert` with `onConflict: "user_id"` is used instead of update (handles the edge case where a profile row doesn't exist yet).
+- **`useStudioDrawers.ts`**: Explain the `setTimeout` delays in `handleDetailClose` (300ms) and `handleProductClickFromDrawer` (200ms) — these let the closing drawer animation complete before opening the next one, preventing visual glitches.
+- **`useLocalGearList.ts`**: Explain why state initializer reads from localStorage synchronously (avoids a flash of empty state on mount). Explain the SSR guard (`typeof window === "undefined"`).
+- **`feedback.ts`**: Explain the musical note frequencies (C5/E5/G5 form a C-major chord for a pleasant ascending chime). Explain why `AudioContext` is a singleton with `resume()` (browser autoplay policies suspend contexts created before user interaction). Explain why volume is kept at 0.1-0.15 (subtle enough for a baby-product app — parents may have sleeping children nearby).
+- **`validation.ts`**: Explain the `.transform().pipe()` pattern (Zod runs the transform first, then validates the result — this catches inputs that are only whitespace after sanitization). Explain why control characters are stripped but `\n`, `\r`, `\t` are kept (users need line breaks in forum posts).
+- **`safeAsync.ts`**: Explain the Go-style `[data, error]` tuple pattern and why it's preferred over try/catch in calling code (enables cleaner control flow without nested blocks).
 
-```tsx
-const Studio = lazy(() => import("./pages/Studio"));
-const Community = lazy(() => import("./pages/Community"));
-const Auth = lazy(() => import("./pages/Auth"));
-const Profile = lazy(() => import("./pages/Profile"));
-const About = lazy(() => import("./pages/About"));
-```
+## 2. Generate comprehensive README.md
 
-## 2. Dependency Audit & Unused Library Removal
+Replace the current generic Lovable README with a project-specific one covering:
 
-| Library | Size | Status | Action |
-|---------|------|--------|--------|
-| `recharts` | ~200KB | Only imported in `chart.tsx`, never used by any page | **Remove from package.json** and delete `chart.tsx` |
-| `framer-motion` | ~130KB | Used in 31 files | Keep, but already tree-shaken; no action needed |
-| `cmdk` | ~15KB | Only in `command.tsx` UI component | Check if used; if not, remove |
-| `react-resizable-panels` | ~20KB | Only in `resizable.tsx` UI component | Check if used; if not, remove |
-| `embla-carousel-react` | ~15KB | Only in `carousel.tsx` UI component | Check if used; if not, remove |
-| `react-day-picker` | ~30KB | Only in `calendar.tsx` UI component | Check if used; if not, remove |
-| `input-otp` | ~10KB | Only in `input-otp.tsx` UI component | Check if used; if not, remove |
-| `vaul` | ~8KB | Used in `PostDetailDrawer` and `drawer.tsx` | Keep |
+- **Project description**: "The Little Voyage" — a baby gear discovery and community platform for parents
+- **Tech stack**: React 18, Vite, TypeScript, Tailwind CSS, shadcn/ui, Framer Motion, Lovable Cloud (backend)
+- **Getting started**: Clone, `npm install`, `npm run dev`
+- **Project structure overview**: A directory tree with descriptions for each folder (`pages/`, `components/`, `hooks/`, `lib/`, `data/`, `contexts/`, `integrations/`)
+- **Architecture notes**: Logic/UI separation pattern, constants centralization, shared components
+- **Available scripts**: `dev`, `build`, `lint`, `test`
+- **Key conventions**: File naming, component organization, validation approach
 
-I'll verify which shadcn UI components are actually imported by application code and remove unused ones along with their dependencies.
+## 3. Remove dead code and reorganize folder structure
 
-## 3. Parallel Data Fetching (`PostDetailDrawer`)
+**Delete unused files** (confirmed zero imports):
+- `src/components/NavLink.tsx` — never imported
+- `src/components/studio/StrollerCard.tsx` — superseded by `ProductCard.tsx`
+- `src/components/studio/StrollerCarousel.tsx` — superseded by `ProductCarousel.tsx`
+- `src/components/studio/HighlightPanel.tsx` — superseded by `ProductHighlightPanel.tsx`
 
-`PostDetailDrawer` fires **3 sequential queries** when opened (post, comments, hasLiked), and both post and comments do a secondary sequential call to fetch profiles. This can be optimized:
+**Move misplaced file**:
+- `src/components/community/PostAuthorMeta.tsx` is a shared UI primitive (renders an avatar + name + timestamp). However, since it's only used by community components, it stays where it is — no move needed.
 
-**Current flow (sequential within each query):**
-1. Fetch post → then fetch post author profile
-2. Fetch comments → then fetch comment author profiles
-3. Fetch hasLiked
+**The existing structure is already well-organized.** The current grouping (by feature domain: `studio/`, `community/`, `layout/`, `sections/`, `ui/`) follows established conventions. No major reorganization is warranted — only the dead file cleanup above.
 
-**Optimized flow:**
-- Post + comments queries already run in parallel via separate `useQuery` hooks (good)
-- Within the **comments** query: use `Promise.all` to fetch comments and profiles simultaneously instead of sequentially
-- Within the **post** query: same — fetch post and profile in parallel
-- **Select only needed fields** instead of `select("*")`: both `forum_posts_secure` and `forum_comments_secure` use `select("*")` but only need specific columns
+## 4. Suggest Git commit message
 
-**PostList** has the same sequential pattern — fetch posts, then fetch profiles. Refactor to use `Promise.all`.
+Provide a conventional-commit-format message the user can use for the cumulative recent changes.
 
-## 4. Rendering Optimization (React.memo, useCallback)
+## Summary of changes
 
-**No `React.memo` is used anywhere in the project.** Key candidates:
+| Action | Files |
+|--------|-------|
+| Add business-logic comments | `AuthContext.tsx`, `useAuthForm.ts`, `useProfile.ts`, `useStudioDrawers.ts`, `useLocalGearList.ts`, `feedback.ts`, `validation.ts`, `safeAsync.ts` |
+| Rewrite README.md | `README.md` |
+| Delete dead code | `NavLink.tsx`, `StrollerCard.tsx`, `StrollerCarousel.tsx`, `HighlightPanel.tsx` |
 
-| Component | Why | Benefit |
-|-----------|-----|---------|
-| `ProductCard` | Re-renders on every carousel state change for all cards, not just the active one | Prevents re-render when `offset`, `isActive` haven't changed |
-| `PostAuthorMeta` | Pure presentational, receives primitive props | Skips re-render when parent list re-renders |
-| `ProductHighlightPanel` | Re-renders when any Studio state changes | Only re-render when `product` prop changes |
-| `PaginationDots` | Re-renders on every carousel interaction | Only needs `total`, `activeIndex` |
-| `CategorySection` | Re-renders when unrelated Studio state (drawer open/close) changes | Memo with products array comparison |
-| `Navbar` / `Footer` | Static content, re-render on every page state change | Wrap in `React.memo` |
-
-**PostList rendering:** The list renders all posts with `motion.article` and staggered animations. For now the list is paginated server-side so virtualization isn't needed (posts are loaded per-category, typically <50 items). Add `React.memo` to individual post items instead.
-
-## 5. Image Optimization
-
-The project has **13 images** in `src/assets/` — all are `.png` or `.jpg`. Vite doesn't auto-convert to WebP.
-
-**Approach:** Create a Node script (`scripts/optimize-images.js`) that:
-1. Reads all images from `src/assets/`
-2. Uses the `sharp` library to:
-   - Convert to WebP format
-   - Resize to max dimensions (product cards display at 320x380, so cap at 640x760 for 2x retina)
-   - Compress at quality 80
-3. Outputs optimized files alongside originals with `.webp` extension
-4. Updates import references in data files
-
-**However**, since this is a Lovable project without a Node script runner, the practical approach is:
-- Add `loading="lazy"` to all images not above the fold (already done on `ProductCard`)
-- Add `loading="lazy"` to hero background image — it's decorative and below the fold threshold can be deferred
-- Add explicit `width` and `height` attributes to images to prevent layout shift
-- Use CSS `aspect-ratio` on image containers
-
-## Summary of Changes
-
-**Files to modify:**
-- `App.tsx` — lazy loading routes
-- `package.json` — remove `recharts` + unused shadcn dependencies
-- `PostDetailDrawer.tsx` — parallel fetches + select specific fields
-- `PostList.tsx` — parallel fetches + select specific fields  
-- `ProductCard.tsx` — wrap in `React.memo`
-- `PostAuthorMeta.tsx` — wrap in `React.memo`
-- `ProductHighlightPanel.tsx` — wrap in `React.memo`
-- `PaginationDots.tsx` — wrap in `React.memo`
-- `CategorySection.tsx` — wrap in `React.memo`
-- `Navbar.tsx` — wrap in `React.memo`
-- `Footer.tsx` — wrap in `React.memo`
-- Remove unused UI components: `chart.tsx` + others confirmed unused
-- `Hero.tsx` — add width/height to hero image
+No database or configuration changes needed.
 
