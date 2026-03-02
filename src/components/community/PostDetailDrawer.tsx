@@ -148,6 +148,13 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
       queryClient.invalidateQueries({ queryKey: ["forum-post-liked", postId, user?.id] });
       queryClient.invalidateQueries({ queryKey: ["forum-posts"] });
     },
+    onError: () => {
+      toast({
+        title: "Couldn't update like",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    },
   });
 
   const [commentError, setCommentError] = useState<string | null>(null);
@@ -299,9 +306,14 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-center text-muted-foreground py-8">
-                      No comments yet. Be the first to respond!
-                    </p>
+                    <div className="text-center py-10">
+                      <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+                        <MessageCircle className="w-6 h-6 text-muted-foreground" />
+                      </div>
+                      <p className="text-muted-foreground text-sm">
+                        No comments yet. Be the first to respond!
+                      </p>
+                    </div>
                   )}
                 </div>
 

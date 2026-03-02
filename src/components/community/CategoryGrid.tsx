@@ -8,9 +8,13 @@ import {
   Moon,
   Sun,
   Footprints,
+  AlertCircle,
+  RefreshCw,
+  MessageCircle,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 interface Category {
   id: string;
@@ -47,7 +51,7 @@ interface CategoryGridProps {
 }
 
 export function CategoryGrid({ selectedCategoryId, onSelectCategory }: CategoryGridProps) {
-  const { data: categories, isLoading } = useQuery({
+  const { data: categories, isLoading, isError, refetch } = useQuery({
     queryKey: ["forum-categories"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -61,7 +65,7 @@ export function CategoryGrid({ selectedCategoryId, onSelectCategory }: CategoryG
   });
 
   if (selectedCategoryId) {
-    return null; // Hide grid when a category is selected
+    return null;
   }
 
   if (isLoading) {
@@ -71,6 +75,50 @@ export function CategoryGrid({ selectedCategoryId, onSelectCategory }: CategoryG
           <Skeleton key={i} className="h-32 rounded-2xl" />
         ))}
       </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-center py-16"
+      >
+        <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
+          <AlertCircle className="w-8 h-8 text-destructive" />
+        </div>
+        <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
+          Couldn't load categories
+        </h3>
+        <p className="text-muted-foreground mb-6">
+          Something went wrong. Please try again.
+        </p>
+        <Button onClick={() => refetch()} variant="outline" className="gap-2">
+          <RefreshCw className="w-4 h-4" />
+          Retry
+        </Button>
+      </motion.div>
+    );
+  }
+
+  if (!categories?.length) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-center py-16"
+      >
+        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+          <MessageCircle className="w-8 h-8 text-muted-foreground" />
+        </div>
+        <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
+          No categories yet
+        </h3>
+        <p className="text-muted-foreground">
+          Community topics are coming soon — check back later!
+        </p>
+      </motion.div>
     );
   }
 
@@ -86,7 +134,7 @@ export function CategoryGrid({ selectedCategoryId, onSelectCategory }: CategoryG
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {categories?.map((category, index) => {
+        {categories.map((category, index) => {
           const IconComponent = iconMap[category.icon || "heart"] || Heart;
           const colors = stageColors[category.stage || ""] || stageColors.newborn;
 
@@ -98,7 +146,8 @@ export function CategoryGrid({ selectedCategoryId, onSelectCategory }: CategoryG
               transition={{ delay: index * 0.05 }}
               onClick={() => onSelectCategory(category.id)}
               className={`group p-6 rounded-2xl border-2 ${colors.border} ${colors.bg} 
-                hover:shadow-lg transition-all duration-300 text-left hover:-translate-y-1`}
+                hover:shadow-lg transition-all duration-300 text-left hover:-translate-y-1
+                min-h-[44px]`}
             >
               <div className={`w-12 h-12 rounded-xl ${colors.bg} border ${colors.border} 
                 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>

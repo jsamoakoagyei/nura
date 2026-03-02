@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { MessageCircle, Heart, Clock, User } from "lucide-react";
+import { MessageCircle, Heart, Clock, User, AlertCircle, RefreshCw } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { PostDetailDrawer } from "./PostDetailDrawer";
 
@@ -30,10 +31,9 @@ interface PostListProps {
 export function PostList({ categoryId }: PostListProps) {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
-  const { data: posts, isLoading } = useQuery({
+  const { data: posts, isLoading, isError, refetch } = useQuery({
     queryKey: ["forum-posts", categoryId],
     queryFn: async () => {
-      // Fetch posts using secure view that hides user_id for anonymous posts
       const { data: postsData, error: postsError } = await supabase
         .from("forum_posts_secure")
         .select("*")
@@ -44,7 +44,6 @@ export function PostList({ categoryId }: PostListProps) {
 
       if (postsError) throw postsError;
 
-      // Fetch profiles for non-anonymous posts
       const userIds = postsData
         .filter((p) => !p.is_anonymous)
         .map((p) => p.user_id);
@@ -82,6 +81,30 @@ export function PostList({ categoryId }: PostListProps) {
     );
   }
 
+  if (isError) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-center py-16"
+      >
+        <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
+          <AlertCircle className="w-8 h-8 text-destructive" />
+        </div>
+        <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
+          Couldn't load posts
+        </h3>
+        <p className="text-muted-foreground mb-6">
+          Something went wrong. Please try again.
+        </p>
+        <Button onClick={() => refetch()} variant="outline" className="gap-2">
+          <RefreshCw className="w-4 h-4" />
+          Retry
+        </Button>
+      </motion.div>
+    );
+  }
+
   if (!posts?.length) {
     return (
       <motion.div
@@ -113,7 +136,8 @@ export function PostList({ categoryId }: PostListProps) {
             transition={{ delay: index * 0.05 }}
             onClick={() => setSelectedPostId(post.id)}
             className="group bg-card rounded-2xl border border-border p-5 
-              hover:shadow-lg hover:border-primary/20 transition-all duration-300 cursor-pointer"
+              hover:shadow-lg hover:border-primary/20 transition-all duration-300 cursor-pointer
+              min-h-[44px]"
           >
             {/* Header */}
             <div className="flex items-start justify-between gap-4 mb-3">

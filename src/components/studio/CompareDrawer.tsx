@@ -71,7 +71,7 @@ export function CompareDrawer({
             <div className="min-w-max">
               {/* Products header row */}
               <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border/50">
-                <div className="grid" style={{ gridTemplateColumns: `120px repeat(${products.length}, minmax(140px, 1fr))` }}>
+                <div className="grid" style={{ gridTemplateColumns: `100px repeat(${products.length}, minmax(140px, 1fr))` }}>
                   <div className="p-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Product
                   </div>
@@ -137,7 +137,7 @@ export function CompareDrawer({
               })}
 
               {/* Highlights row */}
-              <div className="grid border-t border-border/50" style={{ gridTemplateColumns: `120px repeat(${products.length}, minmax(140px, 1fr))` }}>
+              <div className="grid border-t border-border/50" style={{ gridTemplateColumns: `100px repeat(${products.length}, minmax(140px, 1fr))` }}>
                 <div className="p-3 flex items-start">
                   <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Highlights
@@ -231,7 +231,7 @@ function CompareRow({
   return (
     <div 
       className={`grid border-t border-border/50 ${isHighlight ? "bg-muted/20" : ""}`}
-      style={{ gridTemplateColumns: `120px repeat(${count}, minmax(140px, 1fr))` }}
+      style={{ gridTemplateColumns: `100px repeat(${count}, minmax(140px, 1fr))` }}
     >
       <div className="p-3 flex items-center gap-2">
         {Icon && <Icon className="w-3.5 h-3.5 text-primary" />}

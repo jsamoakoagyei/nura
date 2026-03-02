@@ -13,7 +13,7 @@ export function PaginationDots({ total, activeIndex, onDotClick }: PaginationDot
         <button
           key={index}
           onClick={() => onDotClick(index)}
-          className="relative p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full"
+          className="relative p-2 min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full"
           aria-label={`Go to stroller ${index + 1}`}
         >
           <motion.div
