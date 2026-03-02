@@ -1,104 +1,104 @@
 
 
-# Code Refactoring: Components, Logic Separation, Constants, and DRY
+# Performance Optimization Plan
 
-## Analysis Summary
+## 1. Code-Splitting & Lazy Loading (Bundle Size)
 
-After reviewing all files, the codebase is reasonably well-organized but has clear opportunities for improvement across four areas: duplicate UI patterns, hardcoded strings, large components, and mixed logic/UI.
+Every page is eagerly imported in `App.tsx`, meaning the entire app downloads on first load. Pages like Studio, Community, Auth, Profile, and About are never needed on the landing page.
 
-## Plan
+**Changes to `App.tsx`:**
+- Replace static imports with `React.lazy()` for all pages except `Index`
+- Wrap routes in `<Suspense>` with a lightweight spinner fallback
+- This defers ~60% of page-level code (Studio alone pulls in all product data, carousels, drawers, etc.)
 
-### 1. Extract reusable `ErrorState` and `EmptyState` components
-
-The same error UI (icon + title + message + retry button) appears in `CategoryGrid`, `PostList`, and `ForumSection`. The same empty state pattern (icon + title + message) appears in `PostList`, `PostDetailDrawer`, and `MyGearDrawer`.
-
-**Create `src/components/ui/ErrorState.tsx`** — accepts `title`, `message`, `onRetry`, and optional `onBack`.
-
-**Create `src/components/ui/EmptyState.tsx`** — accepts `icon`, `title`, `message`, and optional `action` (label + onClick).
-
-Update `CategoryGrid`, `PostList`, `ForumSection`, `PostDetailDrawer`, and `MyGearDrawer` to use these shared components instead of inline markup.
-
-### 2. Extract reusable `ProductImagePlaceholder` component
-
-The product image fallback (gradient background + emoji icon) is duplicated in `ProductCard`, `ProductDetailDrawer`, `CompareDrawer` (ProductHeader), and `MyGearDrawer` (GearCard).
-
-**Create `src/components/studio/ProductImagePlaceholder.tsx`** — accepts `category` and optional `className`. Renders the gradient + emoji. Update all four locations.
-
-### 3. Extract `PostAuthorMeta` component
-
-The author display pattern (User icon + anonymous check + display name + timestamp) is duplicated between `PostList` and `PostDetailDrawer`.
-
-**Create `src/components/community/PostAuthorMeta.tsx`** — accepts `isAnonymous`, `displayName`, `createdAt`. Used in both post list items and the detail drawer header.
-
-### 4. Extract constants file
-
-**Create `src/lib/constants.ts`** with:
-- `NAV_ITEMS` — currently hardcoded in `Navbar.tsx`
-- `FOOTER_LINKS` — currently hardcoded in `Footer.tsx`
-- `ROUTES` — path constants (`AUTH`, `COMMUNITY`, `PROFILE`, `STUDIO`, `HOME`, `ABOUT`) used throughout redirects and links
-- `APP_NAME` — "The Little Voyage"
-- `STATS` — hero/community stats ("50,000+", "10,000+", etc.)
-
-Update `Navbar.tsx`, `Footer.tsx`, `Hero.tsx`, `CommunityHero.tsx`, `Auth.tsx`, and other files with hardcoded paths to import from constants.
-
-### 5. Extract `useAuthForm` hook from Auth page
-
-`Auth.tsx` (~340 lines) mixes form state, validation, submission logic, and UI.
-
-**Create `src/hooks/useAuthForm.ts`** — encapsulates:
-- Form state (`email`, `password`, `displayName`, `showPassword`, `errors`)
-- `validateForm()`, `handleSubmit()`, `handleGoogleSignIn()`
-- Loading states (`isSubmitting`, `isGoogleLoading`)
-- `toggleMode()` (login ↔ signup)
-
-`Auth.tsx` becomes a pure UI component that calls the hook and renders JSX.
-
-### 6. Extract `useStudioDrawers` hook from Studio page
-
-`Studio.tsx` manages 6 pieces of drawer state and 5+ callbacks. 
-
-**Create `src/hooks/useStudioDrawers.ts`** — encapsulates:
-- `detailProduct`, `isDetailOpen`, `isGearDrawerOpen`, `isCompareOpen`
-- `handleDetailOpen`, `handleDetailClose`, `handleGearDrawerOpen`, `handleCompareOpen`, `handleProductClickFromDrawer`
-
-`Studio.tsx` becomes cleaner, focused on filtering logic and layout.
-
-### 7. Extract `useProfile` hook from Profile page
-
-`Profile.tsx` (~330 lines) mixes profile fetching, avatar upload, and save logic with UI.
-
-**Create `src/hooks/useProfile.ts`** — encapsulates:
-- Profile fetch on mount
-- `handleFileChange` (avatar upload)
-- `handleSave` (profile update)
-- All related loading/error states
-
-### 8. Wrap async operations with consistent error handling
-
-Create a small utility **`src/lib/safeAsync.ts`**:
+```tsx
+const Studio = lazy(() => import("./pages/Studio"));
+const Community = lazy(() => import("./pages/Community"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Profile = lazy(() => import("./pages/Profile"));
+const About = lazy(() => import("./pages/About"));
 ```
-async function safeAsync<T>(fn: () => Promise<T>): Promise<[T, null] | [null, Error]>
-```
-This provides a consistent try/catch pattern that can be used across hooks and mutations, replacing ad-hoc try/catch blocks.
 
----
+## 2. Dependency Audit & Unused Library Removal
 
-## Files Created (8 new)
-- `src/components/ui/ErrorState.tsx`
-- `src/components/ui/EmptyState.tsx`
-- `src/components/studio/ProductImagePlaceholder.tsx`
-- `src/components/community/PostAuthorMeta.tsx`
-- `src/lib/constants.ts`
-- `src/hooks/useAuthForm.ts`
-- `src/hooks/useStudioDrawers.ts`
-- `src/hooks/useProfile.ts`
+| Library | Size | Status | Action |
+|---------|------|--------|--------|
+| `recharts` | ~200KB | Only imported in `chart.tsx`, never used by any page | **Remove from package.json** and delete `chart.tsx` |
+| `framer-motion` | ~130KB | Used in 31 files | Keep, but already tree-shaken; no action needed |
+| `cmdk` | ~15KB | Only in `command.tsx` UI component | Check if used; if not, remove |
+| `react-resizable-panels` | ~20KB | Only in `resizable.tsx` UI component | Check if used; if not, remove |
+| `embla-carousel-react` | ~15KB | Only in `carousel.tsx` UI component | Check if used; if not, remove |
+| `react-day-picker` | ~30KB | Only in `calendar.tsx` UI component | Check if used; if not, remove |
+| `input-otp` | ~10KB | Only in `input-otp.tsx` UI component | Check if used; if not, remove |
+| `vaul` | ~8KB | Used in `PostDetailDrawer` and `drawer.tsx` | Keep |
 
-## Files Modified (~15)
-- `CategoryGrid.tsx`, `PostList.tsx`, `ForumSection.tsx`, `PostDetailDrawer.tsx`, `MyGearDrawer.tsx` — use ErrorState/EmptyState
-- `ProductCard.tsx`, `ProductDetailDrawer.tsx`, `CompareDrawer.tsx`, `MyGearDrawer.tsx` — use ProductImagePlaceholder
-- `PostList.tsx`, `PostDetailDrawer.tsx` — use PostAuthorMeta
-- `Navbar.tsx`, `Footer.tsx`, `Hero.tsx`, `CommunityHero.tsx` — import from constants
-- `Auth.tsx`, `Studio.tsx`, `Profile.tsx` — use extracted hooks
+I'll verify which shadcn UI components are actually imported by application code and remove unused ones along with their dependencies.
 
-No database or configuration changes needed.
+## 3. Parallel Data Fetching (`PostDetailDrawer`)
+
+`PostDetailDrawer` fires **3 sequential queries** when opened (post, comments, hasLiked), and both post and comments do a secondary sequential call to fetch profiles. This can be optimized:
+
+**Current flow (sequential within each query):**
+1. Fetch post → then fetch post author profile
+2. Fetch comments → then fetch comment author profiles
+3. Fetch hasLiked
+
+**Optimized flow:**
+- Post + comments queries already run in parallel via separate `useQuery` hooks (good)
+- Within the **comments** query: use `Promise.all` to fetch comments and profiles simultaneously instead of sequentially
+- Within the **post** query: same — fetch post and profile in parallel
+- **Select only needed fields** instead of `select("*")`: both `forum_posts_secure` and `forum_comments_secure` use `select("*")` but only need specific columns
+
+**PostList** has the same sequential pattern — fetch posts, then fetch profiles. Refactor to use `Promise.all`.
+
+## 4. Rendering Optimization (React.memo, useCallback)
+
+**No `React.memo` is used anywhere in the project.** Key candidates:
+
+| Component | Why | Benefit |
+|-----------|-----|---------|
+| `ProductCard` | Re-renders on every carousel state change for all cards, not just the active one | Prevents re-render when `offset`, `isActive` haven't changed |
+| `PostAuthorMeta` | Pure presentational, receives primitive props | Skips re-render when parent list re-renders |
+| `ProductHighlightPanel` | Re-renders when any Studio state changes | Only re-render when `product` prop changes |
+| `PaginationDots` | Re-renders on every carousel interaction | Only needs `total`, `activeIndex` |
+| `CategorySection` | Re-renders when unrelated Studio state (drawer open/close) changes | Memo with products array comparison |
+| `Navbar` / `Footer` | Static content, re-render on every page state change | Wrap in `React.memo` |
+
+**PostList rendering:** The list renders all posts with `motion.article` and staggered animations. For now the list is paginated server-side so virtualization isn't needed (posts are loaded per-category, typically <50 items). Add `React.memo` to individual post items instead.
+
+## 5. Image Optimization
+
+The project has **13 images** in `src/assets/` — all are `.png` or `.jpg`. Vite doesn't auto-convert to WebP.
+
+**Approach:** Create a Node script (`scripts/optimize-images.js`) that:
+1. Reads all images from `src/assets/`
+2. Uses the `sharp` library to:
+   - Convert to WebP format
+   - Resize to max dimensions (product cards display at 320x380, so cap at 640x760 for 2x retina)
+   - Compress at quality 80
+3. Outputs optimized files alongside originals with `.webp` extension
+4. Updates import references in data files
+
+**However**, since this is a Lovable project without a Node script runner, the practical approach is:
+- Add `loading="lazy"` to all images not above the fold (already done on `ProductCard`)
+- Add `loading="lazy"` to hero background image — it's decorative and below the fold threshold can be deferred
+- Add explicit `width` and `height` attributes to images to prevent layout shift
+- Use CSS `aspect-ratio` on image containers
+
+## Summary of Changes
+
+**Files to modify:**
+- `App.tsx` — lazy loading routes
+- `package.json` — remove `recharts` + unused shadcn dependencies
+- `PostDetailDrawer.tsx` — parallel fetches + select specific fields
+- `PostList.tsx` — parallel fetches + select specific fields  
+- `ProductCard.tsx` — wrap in `React.memo`
+- `PostAuthorMeta.tsx` — wrap in `React.memo`
+- `ProductHighlightPanel.tsx` — wrap in `React.memo`
+- `PaginationDots.tsx` — wrap in `React.memo`
+- `CategorySection.tsx` — wrap in `React.memo`
+- `Navbar.tsx` — wrap in `React.memo`
+- `Footer.tsx` — wrap in `React.memo`
+- Remove unused UI components: `chart.tsx` + others confirmed unused
+- `Hero.tsx` — add width/height to hero image
 
