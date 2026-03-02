@@ -58,6 +58,9 @@ export function useAuthForm() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
+          // Supabase returns generic error strings rather than error codes for
+          // auth failures. We string-match known messages to provide actionable,
+          // user-friendly feedback instead of exposing raw backend errors.
           if (error.message.includes("Invalid login credentials")) {
             toast({ title: "Login failed", description: "Invalid email or password. Please try again.", variant: "destructive" });
           } else if (error.message.includes("Email not confirmed")) {
@@ -71,6 +74,9 @@ export function useAuthForm() {
         toast({ title: "Welcome back!", description: "You've successfully signed in." });
         navigate(ROUTES.COMMUNITY);
       } else {
+        // emailRedirectTo tells the auth service where to send users after they
+        // click the email confirmation link. Without this, the confirmation flow
+        // would drop users on a default page instead of returning them to our app.
         const redirectUrl = `${window.location.origin}${ROUTES.COMMUNITY}`;
 
         const { error } = await supabase.auth.signUp({

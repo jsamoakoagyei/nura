@@ -22,14 +22,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set up auth state listener FIRST
+    // Register the auth state listener BEFORE calling getSession to prevent a
+    // race condition: if getSession resolves before the listener is attached,
+    // subsequent auth events (e.g. token refresh) would be missed entirely.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Defer profile creation to avoid deadlock
+        // Profile creation is deferred via setTimeout(fn, 0) to avoid a
+        // deadlock: the onAuthStateChange callback runs inside Supabase's
+        // internal auth lock, and making another Supabase call (insert) from
+        // within that lock would cause it to wait on itself indefinitely.
         if (event === "SIGNED_IN" && session?.user) {
           setTimeout(() => {
             createProfileIfNeeded(session.user.id);
@@ -38,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     );
 
-    // THEN check for existing session
+    // THEN check for an existing session (e.g. page reload with a valid cookie).
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);

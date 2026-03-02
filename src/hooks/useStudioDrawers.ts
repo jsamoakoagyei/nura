@@ -14,6 +14,9 @@ export function useStudioDrawers() {
 
   const handleDetailClose = useCallback(() => {
     setIsDetailOpen(false);
+    // Wait 300ms before clearing the product data so the drawer's closing
+    // animation can finish while still showing content. Clearing immediately
+    // would cause a visible flash of empty content as the drawer slides out.
     setTimeout(() => setDetailProduct(null), 300);
   }, []);
 
@@ -29,6 +32,9 @@ export function useStudioDrawers() {
   const handleProductClickFromDrawer = useCallback((product: Product) => {
     setIsGearDrawerOpen(false);
     setIsCompareOpen(false);
+    // A 200ms delay lets the current drawer's exit animation complete before
+    // opening the detail drawer. Without this, both drawers would try to
+    // animate simultaneously, causing visual glitches and z-index conflicts.
     setTimeout(() => {
       setDetailProduct(product);
       setIsDetailOpen(true);

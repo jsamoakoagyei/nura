@@ -27,6 +27,9 @@ export function useProfile() {
           .eq("user_id", user.id)
           .single();
 
+        // PGRST116 means "no rows found" — this is expected for brand-new users
+        // who signed up but haven't set up a profile yet. We treat it as a
+        // non-error and let them fill in the form from scratch.
         if (error && error.code !== "PGRST116") throw error;
 
         if (data) {
@@ -77,6 +80,10 @@ export function useProfile() {
       if (uploadError) throw uploadError;
 
       const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(filePath);
+
+      // Append a cache-busting timestamp so the CDN serves the freshly uploaded
+      // image immediately. Without this, the CDN would return the cached
+      // previous avatar until the cache TTL expires.
       const newAvatarUrl = `${urlData.publicUrl}?t=${Date.now()}`;
 
       const { error: updateError } = await supabase
@@ -112,6 +119,10 @@ export function useProfile() {
     const sanitizedName = displayName ? sanitizeText(displayName) : null;
 
     try {
+      // upsert with onConflict: "user_id" is used instead of a plain update
+      // because the profile row may not exist yet — e.g. if the auth callback
+      // that creates it (AuthContext) hasn't completed, or if the user was
+      // created via an OAuth flow that skipped profile seeding.
       const { error } = await supabase
         .from("profiles")
         .upsert(

@@ -8,7 +8,12 @@ export interface SavedProduct {
 }
 
 export function useLocalGearList() {
+  // State is initialized synchronously from localStorage (not in a useEffect)
+  // to avoid a flash of empty state on mount — without this, the gear count
+  // badge would briefly show "0" before jumping to the real value.
   const [savedProducts, setSavedProducts] = useState<SavedProduct[]>(() => {
+    // SSR guard: localStorage doesn't exist in server-side rendering contexts.
+    // This is defensive — the app is SPA-only, but protects against future SSR.
     if (typeof window === "undefined") return [];
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
