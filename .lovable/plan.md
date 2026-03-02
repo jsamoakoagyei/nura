@@ -1,66 +1,88 @@
 
 
-# Responsive, Loading, Empty States, and Error Handling Improvements
+# Semantic HTML, Keyboard Accessibility, Screen Reader & Contrast Improvements
 
-## Current State Assessment
+## Current State
 
-The app is already well-built across most of these areas. Here's what exists and what needs improvement:
+The codebase is in good shape for many of these concerns. The Navbar already uses `<nav>`, Footer uses `<footer>`, pages use `<main>`, Hero has `<h1>`, sections use `<section>`. Many buttons have `aria-label` attributes. The main gaps are:
 
-### Already Good
-- **Responsiveness**: Most layouts use Tailwind responsive classes (`sm:`, `lg:`, `xl:`), container + px-4 pattern, mobile-first breakpoints. Hero, Footer, Navbar, Auth, Profile, CategoryGrid all responsive.
-- **Loading states**: Profile page has full loading spinner + button disable. PostDetailDrawer has skeleton screens. CategoryGrid has skeleton grid. ForumSection has skeleton for category header. Auth buttons disable during submission.
-- **Empty states**: PostList has a nice empty state with icon + message. ProductCarousel has "no products match" text. Studio has empty filter state with "Clear filters" CTA.
-- **Error handling**: Auth page handles specific error types (invalid credentials, email not confirmed, user exists). Profile handles upload/save errors with toasts. CreatePostDialog and PostDetailDrawer show error toasts.
+**Semantic HTML gaps:**
+- Navbar desktop links wrapper uses `<div>` instead of a `<ul>` list
+- Footer link groups use `<div>` wrappers where `<nav>` is more appropriate
+- Testimonials use `<div>` instead of `<blockquote>` + `<cite>`/`<figcaption>`
+- CommunityHero stats use `<div>` where `<ul>` is appropriate
+- Hero trust indicators use `<div>` where `<ul>` is appropriate
+- `ProductCard` is a `<motion.div>` with `onClick` — should be keyboard-accessible (not a `<button>` due to absolute positioning, but needs `role="button"`, `tabIndex`, `onKeyDown`)
 
-### Gaps to Fix
+**Focus visibility gaps:**
+- Global focus styles rely on default browser or per-component `focus-visible:ring-2` — need a global baseline in `index.css`
+- Auth page password toggle `<button>` has no visible focus indicator
+- Auth page sign-in/sign-up toggle link-button has no focus ring
+- Mobile nav links have no focus styles
+- Footer links have no focus styles
+- Features section "Learn more" links have no focus indicator
 
-1. **Responsive issues**:
-   - `CategoryGrid` error state is missing (only loading + data states exist; no error UI)
-   - `ForumSection` "New Post" button text gets cramped on small screens
-   - `CompareDrawer` table is not usable on narrow mobile (120px label column is too wide)
-   - `ProductCard` is hardcoded at `280px` width which can overflow very narrow screens (<320px)
+**Screen reader gaps:**
+- Navbar Search and Bell icon buttons lack `aria-label`
+- WatercolorCloud SVGs are decorative but missing `aria-hidden="true"` and `role="presentation"`
+- Google sign-in SVG needs `aria-hidden="true"` (the button text provides the label)
+- Star rating icons in Testimonials need `aria-hidden` + a text alternative for the "4.9 out of 5" meaning
+- Hero badge pulsing dot is decorative — needs `aria-hidden`
 
-2. **Loading states missing**:
-   - `CategoryGrid` has no error/retry state when fetch fails
-   - `PostList` has no error state — a failed query just shows loading forever
-
-3. **Empty states missing**:
-   - `CategoryGrid` shows nothing if the categories array is empty after loading (no CTA)
-   - `PostDetailDrawer` comments section says "No comments yet" but no icon/visual cue
-   - `ForumSection` has no empty state if category fetch fails
-
-4. **Error handling gaps**:
-   - `PostList` query has no `onError` or error UI — failures are silent
-   - `CategoryGrid` query has no error UI
-   - `ForumSection` category query has no error UI
-   - `toggleLike` mutation in `PostDetailDrawer` has no error toast
+**Contrast concerns:**
+- `text-muted-foreground` is `hsl(202, 15%, 45%)` on `hsl(40, 33%, 98%)` background — approximately 3.7:1 ratio, below 4.5:1 for normal text. Darken to ~38% lightness to reach 4.5:1.
+- CTA section `text-white/80` on blue gradient — may be borderline. Change to `text-white/90`.
 
 ## Plan
 
-### 1. Add error + empty states to `CategoryGrid`
-- Add `error` + `isError` from `useQuery`, show a friendly error card with retry button
-- Add empty state when `categories` is loaded but empty
+### 1. Global focus-visible styles (index.css)
+Add a global `focus-visible` outline style in `@layer base` so all interactive elements get a visible 2px ring by default without needing per-component classes:
+```css
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+```
 
-### 2. Add error state to `PostList`
-- Destructure `error`, `isError` from `useQuery`
-- Show error card with `AlertCircle` icon, friendly message, and retry button
+### 2. Fix muted-foreground contrast (index.css)
+Change `--muted-foreground` from `202 15% 45%` to `202 15% 38%` in light mode to meet WCAG AA 4.5:1 ratio against the background.
 
-### 3. Add error state to `ForumSection`
-- Show error card when category fetch fails, with back + retry actions
+### 3. Navbar semantic improvements
+- Wrap desktop nav links in `<ul>` with `<li>` items
+- Add `aria-label="Search"` to Search button, `aria-label="Notifications"` to Bell button
+- Add `aria-expanded={isOpen}` to mobile menu toggle button
 
-### 4. Add error toast to `toggleLike` in `PostDetailDrawer`
-- Add `onError` callback to the `toggleLike` mutation
+### 4. Footer semantic improvements
+- Wrap the entire footer links grid in a `<nav aria-label="Footer">` and each link group `<ul>` already exists — just add the outer `<nav>`
 
-### 5. Improve empty state in `PostDetailDrawer` comments
-- Add `MessageCircle` icon and softer visual styling to the "No comments yet" message
+### 5. Hero accessibility
+- Add `aria-hidden="true"` to the pulsing dot span
+- Convert trust indicators wrapper to `<ul>` with `<li>` items
 
-### 6. Responsive fixes
-- `ForumSection`: Hide "New Post" text on mobile, show icon-only button
-- `CompareDrawer`: Reduce label column to `100px` on mobile
-- `ProductCard`: Use `min(280px, 80vw)` for card width so it doesn't overflow narrow screens
+### 6. Features section
+- Add `aria-hidden="true"` to decorative feature icons
 
-### 7. Minor touch-target improvements
-- Ensure all interactive elements have at least `min-h-[44px]` / `min-w-[44px]` tap targets (review Navbar mobile links, pagination dots)
+### 7. Testimonials semantics
+- Use `<blockquote>` for the quote, `<figcaption>` or `<cite>` for author
+- Add `aria-hidden="true"` to star icons and ensure the "4.9 out of 5" text is the accessible label via `aria-label` on the container
 
-All changes are incremental edits to existing files. No new files or database changes needed.
+### 8. CTA contrast fix
+- Change `text-white/80` to `text-white/90` for body text
+
+### 9. WatercolorCloud accessibility
+- Add `aria-hidden="true"` to the root element since it's purely decorative
+
+### 10. ProductCard keyboard access
+- Add `role="button"`, `tabIndex={0}`, `onKeyDown` (Enter/Space triggers click) to the card container
+- Already has good alt text on images
+
+### 11. Auth page minor fixes
+- Add `aria-label="Toggle password visibility"` to password toggle button
+- Add focus styles to password toggle and sign-in/up toggle link
+- Add `aria-hidden="true"` to Google SVG icon
+
+### 12. CommunityHero semantics
+- Convert stats wrapper to `<ul>` with `<li>` items
+
+All changes are incremental edits to existing files. No new files or database changes needed. Approximately 12 files touched with small, targeted edits.
 
