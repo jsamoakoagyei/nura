@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { commentContentSchema } from "@/lib/validation";
 
 interface PostDetailDrawerProps {
   postId: string | null;
@@ -149,14 +150,16 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
     },
   });
 
+  const [commentError, setCommentError] = useState<string | null>(null);
+
   const addComment = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (sanitizedContent: string) => {
       if (!user || !postId) throw new Error("Not authenticated");
 
       const { error } = await supabase.from("forum_comments").insert({
         post_id: postId,
         user_id: user.id,
-        content: newComment.trim(),
+        content: sanitizedContent,
         is_anonymous: isAnonymous,
       });
 
@@ -164,6 +167,7 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
     },
     onSuccess: () => {
       setNewComment("");
+      setCommentError(null);
       queryClient.invalidateQueries({ queryKey: ["forum-comments", postId] });
       queryClient.invalidateQueries({ queryKey: ["forum-post", postId] });
       queryClient.invalidateQueries({ queryKey: ["forum-posts"] });
@@ -183,14 +187,20 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
 
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newComment.trim()) return;
     
     if (!user) {
       window.location.href = "/auth";
       return;
     }
-    
-    addComment.mutate();
+
+    const result = commentContentSchema.safeParse(newComment);
+    if (!result.success) {
+      setCommentError(result.error.issues[0].message);
+      return;
+    }
+
+    setCommentError(null);
+    addComment.mutate(result.data);
   };
 
   return (
@@ -297,14 +307,26 @@ export function PostDetailDrawer({ postId, onClose }: PostDetailDrawerProps) {
 
                 {/* Add Comment Form */}
                 <form onSubmit={handleSubmitComment} className="mt-6 space-y-4">
-                  <Textarea
-                    placeholder={user ? "Write a comment..." : "Sign in to comment"}
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    rows={3}
-                    disabled={!user}
-                    className="resize-none"
-                  />
+                  <div className="space-y-1">
+                    <div className="flex justify-end">
+                      <span className="text-xs text-muted-foreground">{newComment.length}/5,000</span>
+                    </div>
+                    <Textarea
+                      placeholder={user ? "Write a comment..." : "Sign in to comment"}
+                      value={newComment}
+                      onChange={(e) => {
+                        setNewComment(e.target.value);
+                        if (commentError) setCommentError(null);
+                      }}
+                      rows={3}
+                      maxLength={5000}
+                      disabled={!user}
+                      className="resize-none"
+                    />
+                    {commentError && (
+                      <p className="text-sm text-destructive">{commentError}</p>
+                    )}
+                  </div>
                   
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

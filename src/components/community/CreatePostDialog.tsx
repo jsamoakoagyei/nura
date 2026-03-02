@@ -14,6 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { postTitleSchema, postContentSchema } from "@/lib/validation";
 
 interface CreatePostDialogProps {
   open: boolean;
@@ -25,20 +26,21 @@ export function CreatePostDialog({ open, onOpenChange, categoryId }: CreatePostD
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
-  
+  const [errors, setErrors] = useState<{ title?: string; content?: string }>({});
+
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const createPost = useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({ sanitizedTitle, sanitizedContent }: { sanitizedTitle: string; sanitizedContent: string }) => {
       if (!user) throw new Error("Not authenticated");
 
       const { error } = await supabase.from("forum_posts").insert({
         category_id: categoryId,
         user_id: user.id,
-        title: title.trim(),
-        content: content.trim(),
+        title: sanitizedTitle,
+        content: sanitizedContent,
         is_anonymous: isAnonymous,
       });
 
@@ -54,6 +56,7 @@ export function CreatePostDialog({ open, onOpenChange, categoryId }: CreatePostD
       setTitle("");
       setContent("");
       setIsAnonymous(false);
+      setErrors({});
     },
     onError: (error: any) => {
       toast({
@@ -66,17 +69,24 @@ export function CreatePostDialog({ open, onOpenChange, categoryId }: CreatePostD
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!title.trim() || !content.trim()) {
-      toast({
-        title: "Missing fields",
-        description: "Please fill in both title and content.",
-        variant: "destructive",
-      });
+
+    const titleResult = postTitleSchema.safeParse(title);
+    const contentResult = postContentSchema.safeParse(content);
+
+    const newErrors: { title?: string; content?: string } = {};
+    if (!titleResult.success) newErrors.title = titleResult.error.issues[0].message;
+    if (!contentResult.success) newErrors.content = contentResult.error.issues[0].message;
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
-    createPost.mutate();
+    setErrors({});
+    createPost.mutate({
+      sanitizedTitle: titleResult.data!,
+      sanitizedContent: contentResult.data!,
+    });
   };
 
   return (
@@ -88,26 +98,45 @@ export function CreatePostDialog({ open, onOpenChange, categoryId }: CreatePostD
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="title">Title</Label>
+              <span className="text-xs text-muted-foreground">{title.length}/200</span>
+            </div>
             <Input
               id="title"
               placeholder="What's on your mind?"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                if (errors.title) setErrors((prev) => ({ ...prev, title: undefined }));
+              }}
               maxLength={200}
             />
+            {errors.title && (
+              <p className="text-sm text-destructive">{errors.title}</p>
+            )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="content">Content</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="content">Content</Label>
+              <span className="text-xs text-muted-foreground">{content.length}/10,000</span>
+            </div>
             <Textarea
               id="content"
               placeholder="Share your thoughts, questions, or experiences..."
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e) => {
+                setContent(e.target.value);
+                if (errors.content) setErrors((prev) => ({ ...prev, content: undefined }));
+              }}
               rows={6}
+              maxLength={10000}
               className="resize-none"
             />
+            {errors.content && (
+              <p className="text-sm text-destructive">{errors.content}</p>
+            )}
           </div>
 
           <div className="flex items-center justify-between py-2">

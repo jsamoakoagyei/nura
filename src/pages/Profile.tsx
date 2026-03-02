@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navbar } from "@/components/layout/Navbar";
+import { displayNameSchema, validateAvatarFile, sanitizeText } from "@/lib/validation";
 
 export default function Profile() {
   const [displayName, setDisplayName] = useState("");
@@ -69,25 +70,17 @@ export default function Profile() {
     fileInputRef.current?.click();
   };
 
+  const [nameError, setNameError] = useState<string | null>(null);
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
 
-    // Validate file type
-    if (!file.type.startsWith("image/")) {
+    const validationError = validateAvatarFile(file);
+    if (validationError) {
       toast({
-        title: "Invalid file type",
-        description: "Please select an image file.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "File too large",
-        description: "Please select an image under 5MB.",
+        title: "Invalid file",
+        description: validationError,
         variant: "destructive",
       });
       return;
@@ -146,14 +139,26 @@ export default function Profile() {
   const handleSave = async () => {
     if (!user) return;
 
+    // Validate display name
+    if (displayName) {
+      const result = displayNameSchema.safeParse(displayName);
+      if (!result.success) {
+        setNameError(result.error.issues[0].message);
+        return;
+      }
+    }
+
+    setNameError(null);
     setIsSaving(true);
+
+    const sanitizedName = displayName ? sanitizeText(displayName) : null;
 
     try {
       const { error } = await supabase
         .from("profiles")
         .upsert({
           user_id: user.id,
-          display_name: displayName.trim() || null,
+          display_name: sanitizedName || null,
           avatar_url: avatarUrl,
         }, {
           onConflict: "user_id",
@@ -285,14 +290,23 @@ export default function Profile() {
                     type="text"
                     placeholder="How should we call you?"
                     value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
+                    onChange={(e) => {
+                      setDisplayName(e.target.value);
+                      if (nameError) setNameError(null);
+                    }}
                     className="pl-10"
                     maxLength={50}
                   />
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  This is how your name appears in the community
-                </p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-muted-foreground">
+                    This is how your name appears in the community
+                  </p>
+                  <span className="text-xs text-muted-foreground">{displayName.length}/50</span>
+                </div>
+                {nameError && (
+                  <p className="text-sm text-destructive">{nameError}</p>
+                )}
               </div>
 
               <Button
